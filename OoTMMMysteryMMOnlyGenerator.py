@@ -106,12 +106,12 @@ while MysteryCount < MinMysterySettings:
         
         OverworldER = ["none", False]
         InteriorER = ["none", False]
-        RegionsER = False
+        RegionsER = "none"
         #Overworld and Interior ER last because screw it
         EntranceRandomizer = random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [80, 10, 4, 4, 2])[0]
         if EntranceRandomizer == "Regions Only":            #Not Hard due to only 5 entrances shuffling
             MysteryCount += 1
-            RegionsER = True
+            RegionsER = "full"
         elif EntranceRandomizer == "Exterior Only":
             MysteryCount += 1
             HardCounter += 1

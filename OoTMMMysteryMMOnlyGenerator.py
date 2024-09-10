@@ -10,6 +10,10 @@ HardModeBalance = False
 # HarderSettings get rolled first to allow limitations
 HARDMODELIMIT = 2
 
+HintToInsertBefore = {"type": "woth",
+                    "amount": 4,
+                    "extra": 1}
+
 while MysteryCount < MinMysterySettings:
     MysteryCount = 0
     HardCounter = 99
@@ -19,7 +23,6 @@ while MysteryCount < MinMysterySettings:
         "MM Great Bay Great Fairy",
         "MM Honey & Darling Reward All Days",
         "MM Ikana Great Fairy",
-        "MM Initial Song of Healing",
         "MM Laboratory Zora Song",
         "MM Moon Fierce Deity Mask",
         "MM Mountain Village Frog Choir HP",
@@ -47,10 +50,6 @@ while MysteryCount < MinMysterySettings:
                 {"type": "sometimes",
                  "amount": "max",
                  "extra": 1}]
-
-    HintToInsertBefore = {"type": "woth",
-                          "amount": 4,
-                          "extra": 1}
 
     HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
 
@@ -95,11 +94,9 @@ while MysteryCount < MinMysterySettings:
          "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0]
     if RandomStartingSong == "none":
         JunkList.remove("MM Southern Swamp Song of Soaring")
-    else:
-        StartingItems[RandomStartingSong] = 1
-        if RandomStartingSong == "MM_SONG_ORDER":
-            MoonConditions["count"] = 0
-            MoonConditions["remains"] = False
+    if RandomStartingSong == "MM_SONG_ORDER":
+        MoonConditions["count"] = 0
+        MoonConditions["remains"] = False
 
     while HardCounter > HARDMODELIMIT:
         HardCounter = 0
@@ -155,7 +152,7 @@ while MysteryCount < MinMysterySettings:
         if PotShuffle == True:
             MysteryCount += 1
             HardCounter += 1
-            JunkList.append("MM Goron Race")
+            JunkList.append("MM Goron Race Reward")
 
         FriendSoulShuffle = False
         EnemySoulShuffle = False
@@ -397,6 +394,7 @@ settings_data = {
                    "coinsGreen": False,
                    "coinsBlue": False,
                    "coinsYellow": False}},
+    "plando": {"locations": {"MM Initial Song of Healing":RandomStartingSong}},
     "hints": HintList,
 }
 
@@ -419,25 +417,25 @@ seed_string = f"v1.{encoded_data}"
 print("Encoded Seed String:")
 print(seed_string)
 
-# seed_string = "v1.eJztV01zm0gQ/SsUhz35sMnmsOsbSEhoLYEK5KiSlItqQ0uaaJhRzQxWKFf++/aAEEj2bm0uPvkEvH7M9Mebpnl2t1Cidm/dsnRv3K0Ebu/hu1RAz/jDKAiZMAlumRTEM6rCG3dH0Kw8SGVA5Nihhoktx3RXbTacQFcbUBajhUo4jGR5AK1fNesSOL/D+mRclGRWWMonLMj6KLX+V6MmD+sJMFXHZoeqX76n5PI4eLf1VbfASIFB/QL2QSnkAzznCCo1RB5XYouUisaNR2l2TXQ2X6Md4wWBeaWNtNncKMQ0B4W5ksd+rYNCmwuOBotutf+yJVgCs5SPtFO5VOjlhj2RK0V85AQ/u6Y+2IiFFEjbPgGvbEm/kdcy3xt5FO7DT4pBl3m6rzg3FYdzYASO5LF73CMeZgZL2lSj6dANaLMAvT+7uWGochwjM7Un6iPlHXsT52uqJppBUHKrUGv2hFOppJiTD/BYWwk0imlKbAxVQwqDwpxr2NWEdBZKuacbMyiJ5KQLuN7sUZaP+a7yYTuo6gE5nzCFV9CaieIKmpNmeuhRSqNn5PIVFBJL9ZipBMub0K6wrySLwQY58AuxGYVia3YDRFZc+xRWD3EUzObkwPa2qBvgmlBUlkUZ3FAu7UFVvZJ6bKoorfICWlipXquuO4lN5a2gFots4aV3mX8fRV/c2w83FknjaJoFyzjyzkg4C+bjLAySuIPikZfMBox1nIwvFkhjS5gSRpL8Xon9XOZg2ubyjVjOGPeVs+RQb5WsROEkeARVOB7nzhhq7dqlnKlCMI4P9emuaQCtKaRTUDu/EVlxiun192d7EPDy3YWUwpk04nYadTtW9p2tEoYOovOZFA5bdCYka2e0k0w54bLlxDmCcKhWBRIoK41OK8/WnApJZwWKlxunsrLdi949QnmgR3JcbugKqu2QltOahotb7yxvpaqmERFrRcfd8VROq9Vd7B9b05p6hiIBcScBWkU7PgLpmJ4o3I4jZdFQhi4+kJwVy/enEmXBZy/KJl4SJ0HzVjYPorS9i+IsDbwwTtKTKY6CVkvpyt6u4nWQtJalN/dGQeYHtFh6N2tTSPq4X5GgCFp7i2WWjpJ7PwuX2TRO4qilrO6j2ei039c48bLQm897JrkwDu7urdd0pHMGnPpK0ejaT2bjaWDvcltN9/Z3K34STH+ySiwo/FaPJ0h1Dfj0rG0T1VNpu/0F1FToCmskccY2lE+Gej25RtLwGpn6LzirC6S2pe79tv2ZPtPU29UluFIg9Eaq8hKOpTkDVF0i2C/5Ccglsx+e4hIgTaC4hHz61lwiX6iL2g9Kg9EZX8RUtz7jn34p46f+9J7wX0g4nar0XeJvmfGpF8VR5t+9Z/1NG4v3NzX/99byZimnnB84iELanPN+bHtuJirBDH1qz6NLiGDHL5o9u8lvNVsErl3E/j3aUeL847KRkjNtBxgo21L+efr3bMbEMw/4sZ3gOhpF/8N9lapliYbZX9ue/cerTEZD74D0oSfdtLY+ApplaXgZvEvpqM2O5tTt0PlPr+5zbP8VO9Jf/9vt6yAffv4DK8tsog=="
+# seed_string = "v1.eJztV0uP4jgQ/itWDruXPuzr1LcAgbANBCX0oJ1RKzJJARkcV2Q7zUSj+e9bzhNodqW59Kkv4HxVLpe/etj+7hx4Dtp5dPLceXAOyIUd86+oOH3DN6O4n0kTwiFDSXpGlfDgHAma5wUqw2UCHWoyeRAQHcv9XhDoaMOVxchQzosx5gXX+q5Y51yIJ6ha4TInsYIcXyEl6Q61/k+hwbOc8kxVg2Euq/MRFFjD5H9Vi8dH0Ob+4r1OYGjaXTsJni+Wb7arGyCSeN6R+3qQJAK4igw3MCnlAYi42ukdmmPNhWV3fMxESmBSaoOW+70CiBKuIFF4Hmzl+VqBm5jslcylwVlQEL47piqshxKl9e6Vi9IG8QutjMnJUuK8/CA/dJ5Ep1IIUwreO0fgGM/d5wmgmBvIdQgaTIfuuTZLrk99xPcZqAQmkJnK7WjpRUJsiQAwvXah8KBA6+wVZqhQLsgHvqss73WO1EE1RsAYpQE5xKVjljLLRzzRwFzQaim7WSlBQdnBbx3YYb5LjuWIHy7iVYAQ00zBDbTNZHoDLSi5BmiHaPSctnED+aSlBsyUMkvq7d5gnyncFwskXMBFslD6gTyY4wWCpdAj2tYNtCqSAREgM8tckZ1s6PdcaEJB2XnE854YtwWsZoqIxguoy/w66DaXlst46UZP8SwIg5Xz+PuDRSJ/7i0mse+FQQcFYzecr9xeYxuEk/4jWM3oxyrMrrDNfOkRQMn4tZSnBSbcNI3kC6mwCZxKtha8OigsZcpCOHOVMlcINuGVdqwdVlPKQp5AK29hBdywEa/aUV3BjcinsqjYL2RDCdrpfbPzE5f87dwF31G4DKqK2bixCOsmQZIlkhvTug5YXQjMVkgnK6XhmWSfqBj4AdiUKoCNj5gp5q8bnSABLhkFLAUCsdTAmqxtxLaPHIGnb12KsLSNieaeeV7UHjHc0z9XWedcZKjw2RoNm0vJxlgWAn7VFx62cy9Xt0JraKPKujGR1oZaB3NVQstVHW1/NKIt9R9FaSYoFGRFsxFwyv8mMJ0OYlqrXO7hhcpAZcmpDXrsfXJX8dQNg9CrZ8ULbxU1o1UQR57rB2HUioKV1yRntLHDTbD1wkaydhfu2ItHHhmLnuYNx5RzzxvKWYK27nIdR+PweRT76za3a5XN82o+btf7HIRu7LuLxaBJLky8p2frNbWCJOOCelRaF8oonE9mnh0lNtzO42+2mijXhvrLIaXtNxneQnRUUWIM39o2ZD1D2/2voDpCN1idMz22Jz4z0NvpLRL5t8hs9EZnc4VUNtSD37bX0yFP54S6BjeKS71HlV/DAZoeoOiSgr0HtECCtOEQ0muAcgLkNTSic+sa+Ye6rz2caoy6xjKwPaln/K+fYrztnR+E/wThVFXRR4q/J+MzdxWs4tHTB+vv2ljcv6n5f7SWd6OcOC8ElylazsVwEfxeX8ZkZuio7e82PnB7c6Nba3+53AThMnKsGfv6tJeJ/hm0RxSZtlcYnvfBrN+u9dWz1+Pi3Fz/OjXa/zfnrqrGHExmn8aD9p93Nc/Nq+7/V75n7nbxlx//AsJDX6g="
 # Remove the 'v1.' prefix
-if seed_string.startswith('v1.'):
-    seed_string = seed_string[3:]
+#if seed_string.startswith('v1.'):
+#    seed_string = seed_string[3:]
 
 # Add padding back if needed
-seed_string += '=' * (-len(seed_string) % 4)
+#seed_string += '=' * (-len(seed_string) % 4)
 
 # Base64 decode
-decoded_bytes = base64.urlsafe_b64decode(seed_string)
+#decoded_bytes = base64.urlsafe_b64decode(seed_string)
 
 # Decompress using zlib
-decompressed_bytes = zlib.decompress(decoded_bytes)
+#decompressed_bytes = zlib.decompress(decoded_bytes)
 
 # Convert bytes to JSON string
-settings_json = decompressed_bytes.decode('utf-8')
+#settings_json = decompressed_bytes.decode('utf-8')
 
 # Parse the JSON string into Python dictionary
-settings_data = json.loads(settings_json)
+#settings_data = json.loads(settings_json)
 
 # Print the result
-print(settings_data)
+#print(settings_data)

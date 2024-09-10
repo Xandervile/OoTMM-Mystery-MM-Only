@@ -125,8 +125,7 @@ while MysteryCount < MinMysterySettings:
             MysteryCount += 1
             ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], [20, 30, 50])[0]
             if ClockProgressiveSetting == "separate":
-                StartingClock = \
-                random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"],
+                StartingClock = random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"],
                                [10, 10, 10, 10, 10, 10])[0]
                 StartingItems[StartingClock] = 1
                 if StartingClock != "MM_CLOCK6":
@@ -422,23 +421,23 @@ print(seed_string)
 
 # seed_string = "v1.eJztV01zm0gQ/SsUhz35sMnmsOsbSEhoLYEK5KiSlItqQ0uaaJhRzQxWKFf++/aAEEj2bm0uPvkEvH7M9Mebpnl2t1Cidm/dsnRv3K0Ebu/hu1RAz/jDKAiZMAlumRTEM6rCG3dH0Kw8SGVA5Nihhoktx3RXbTacQFcbUBajhUo4jGR5AK1fNesSOL/D+mRclGRWWMonLMj6KLX+V6MmD+sJMFXHZoeqX76n5PI4eLf1VbfASIFB/QL2QSnkAzznCCo1RB5XYouUisaNR2l2TXQ2X6Md4wWBeaWNtNncKMQ0B4W5ksd+rYNCmwuOBotutf+yJVgCs5SPtFO5VOjlhj2RK0V85AQ/u6Y+2IiFFEjbPgGvbEm/kdcy3xt5FO7DT4pBl3m6rzg3FYdzYASO5LF73CMeZgZL2lSj6dANaLMAvT+7uWGochwjM7Un6iPlHXsT52uqJppBUHKrUGv2hFOppJiTD/BYWwk0imlKbAxVQwqDwpxr2NWEdBZKuacbMyiJ5KQLuN7sUZaP+a7yYTuo6gE5nzCFV9CaieIKmpNmeuhRSqNn5PIVFBJL9ZipBMub0K6wrySLwQY58AuxGYVia3YDRFZc+xRWD3EUzObkwPa2qBvgmlBUlkUZ3FAu7UFVvZJ6bKoorfICWlipXquuO4lN5a2gFots4aV3mX8fRV/c2w83FknjaJoFyzjyzkg4C+bjLAySuIPikZfMBox1nIwvFkhjS5gSRpL8Xon9XOZg2ubyjVjOGPeVs+RQb5WsROEkeARVOB7nzhhq7dqlnKlCMI4P9emuaQCtKaRTUDu/EVlxiun192d7EPDy3YWUwpk04nYadTtW9p2tEoYOovOZFA5bdCYka2e0k0w54bLlxDmCcKhWBRIoK41OK8/WnApJZwWKlxunsrLdi949QnmgR3JcbugKqu2QltOahotb7yxvpaqmERFrRcfd8VROq9Vd7B9b05p6hiIBcScBWkU7PgLpmJ4o3I4jZdFQhi4+kJwVy/enEmXBZy/KJl4SJ0HzVjYPorS9i+IsDbwwTtKTKY6CVkvpyt6u4nWQtJalN/dGQeYHtFh6N2tTSPq4X5GgCFp7i2WWjpJ7PwuX2TRO4qilrO6j2ei039c48bLQm897JrkwDu7urdd0pHMGnPpK0ejaT2bjaWDvcltN9/Z3K34STH+ySiwo/FaPJ0h1Dfj0rG0T1VNpu/0F1FToCmskccY2lE+Gej25RtLwGpn6LzirC6S2pe79tv2ZPtPU29UluFIg9Eaq8hKOpTkDVF0i2C/5Ccglsx+e4hIgTaC4hHz61lwiX6iL2g9Kg9EZX8RUtz7jn34p46f+9J7wX0g4nar0XeJvmfGpF8VR5t+9Z/1NG4v3NzX/99byZimnnB84iELanPN+bHtuJirBDH1qz6NLiGDHL5o9u8lvNVsErl3E/j3aUeL847KRkjNtBxgo21L+efr3bMbEMw/4sZ3gOhpF/8N9lapliYbZX9ue/cerTEZD74D0oSfdtLY+ApplaXgZvEvpqM2O5tTt0PlPr+5zbP8VO9Jf/9vt6yAffv4DK8tsog=="
 # Remove the 'v1.' prefix
-# if seed_string.startswith('v1.'):
-#    seed_string = seed_string[3:]
+if seed_string.startswith('v1.'):
+    seed_string = seed_string[3:]
 
 # Add padding back if needed
-# seed_string += '=' * (-len(seed_string) % 4)
+seed_string += '=' * (-len(seed_string) % 4)
 
 # Base64 decode
-# decoded_bytes = base64.urlsafe_b64decode(seed_string)
+decoded_bytes = base64.urlsafe_b64decode(seed_string)
 
 # Decompress using zlib
-# decompressed_bytes = zlib.decompress(decoded_bytes)
+decompressed_bytes = zlib.decompress(decoded_bytes)
 
 # Convert bytes to JSON string
-# settings_json = decompressed_bytes.decode('utf-8')
+settings_json = decompressed_bytes.decode('utf-8')
 
 # Parse the JSON string into Python dictionary
-# settings_data = json.loads(settings_json)
+settings_data = json.loads(settings_json)
 
 # Print the result
-# print(settings_data)
+print(settings_data)

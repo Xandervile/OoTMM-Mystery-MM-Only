@@ -12,6 +12,7 @@ HARDMODELIMIT = 2
 
 JunkList = [
 "MM Deku Playground Reward All Days",
+"MM Goron Elder"
 "MM Great Bay Great Fairy",
 "MM Honey & Darling Reward All Days",
 "MM Ikana Great Fairy",
@@ -92,10 +93,6 @@ RandomStartingSong = random.choices(["none", "MM_SONG_EPONA", "MM_SONG_HEALING",
 if RandomStartingSong != "none":
     StartingItems[RandomStartingSong] = 1
     if RandomStartingSong == "MM_SONG_ORDER":
-        HintList.remove({"type":"item",
-            "amount":1,
-            "extra":1,
-            "item":"MM_SONG_ORDER"})
         MoonConditions["count"] = 0
         MoonConditions["remains"] = False
 
@@ -178,6 +175,8 @@ while MysteryCount < MinMysterySettings:
         LongQuest = random.choices(["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"], [35, 20, 15, 30])[0]
         if LongQuest != "none" and LongQuest in JunkList:
             JunkList.remove(LongQuest)
+            JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
+            JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
 
         
         OverworldER = ["none", False]
@@ -210,6 +209,9 @@ while MysteryCount < MinMysterySettings:
     SongShuffle = random.choices(["songLocations", "anywhere"], [65, 35])[0]
     if SongShuffle == "anywhere":
         MysteryCount += 1
+        if "MM Clock Tower Roof Skull Kid Song of Time" not in JunkList:
+            JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
+            JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
 
     TownFairy = "vanilla"
     StrayFairyShuffle = random.choices(["removed","anywhere"], [70, 30])[0]

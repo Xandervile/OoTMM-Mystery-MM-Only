@@ -10,95 +10,96 @@ HardModeBalance = False
 # HarderSettings get rolled first to allow limitations
 HARDMODELIMIT = 2
 
-JunkList = [
-    "MM Deku Playground Reward All Days",
-    "MM Goron Elder",
-    "MM Great Bay Great Fairy",
-    "MM Honey & Darling Reward All Days",
-    "MM Ikana Great Fairy",
-    "MM Laboratory Zora Song",
-    "MM Moon Fierce Deity Mask",
-    "MM Mountain Village Frog Choir HP",
-    "MM Ocean Spider House Wallet",
-    "MM Southern Swamp Song of Soaring",
-    "MM Snowhead Great Fairy",
-    "MM Stock Pot Inn Couple\'s Mask",
-    "MM Swamp Spider House Mask of Truth",
-    "MM Town Archery Reward 2",
-    "MM Waterfall Rapids Beaver Race 2",
-    "MM Woodfall Great Fairy"]
-
-HintList = [{"type": "foolish",
-             "amount": 4,
-             "extra": 1},
-            {"type": "always",
-             "amount": "max",
-             "extra": 1},
-            {"type": "sometimes",
-             "amount": 3,
-             "extra": 1},
-            {"type": "woth",
-             "amount": 4,
-             "extra": 1},
-            {"type": "sometimes",
-             "amount": "max",
-             "extra": 1}]
-
-HintToInsertBefore = {"type": "woth",
-                      "amount": 4,
-                      "extra": 1}
-
-HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
-
-MoonConditions = {"count": 4,
-                  "stones": False,
-                  "medallions": False,
-                  "remains": True,
-                  "skullsGold": False,
-                  "skullsSwamp": False,
-                  "skullsOcean": False,
-                  "fairiesWF": False,
-                  "fairiesSH": False,
-                  "fairiesGB": False,
-                  "fairiesST": False,
-                  "fairyTown": False,
-                  "masksRegular": False,
-                  "masksTransform": False,
-                  "masksOot": False,
-                  "triforce": False,
-                  "coinsRed": False,
-                  "coinsGreen": False,
-                  "coinsBlue": False,
-                  "coinsYellow": False}
-
-StartingItems = {
-    "MM_OCARINA": 1,
-    "MM_SONG_SOARING": 1,
-}
-
-preCompletedDungeons = False
-preCompletedDungeonsRemains = 0
-
-RandomStartingItem = random.choices(
-    ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_DEITY", "MM_BOW", "MM_HOOKSHOT", "MM_BOMB_BAG",
-     "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_MAGIC_UPGRADE"],
-    [5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5])[0]
-if RandomStartingItem != "none":
-    StartingItems[RandomStartingItem] = 1
-RandomStartingSong = random.choices(
-    ["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON", "MM_SONG_ZORA",
-     "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0]
-if RandomStartingSong == "none":
-    JunkList.remove("MM Southern Swamp Song of Soaring")
-else:
-    StartingItems[RandomStartingSong] = 1
-    if RandomStartingSong == "MM_SONG_ORDER":
-        MoonConditions["count"] = 0
-        MoonConditions["remains"] = False
-
 while MysteryCount < MinMysterySettings:
     MysteryCount = 0
     HardCounter = 99
+
+    JunkList = [
+        "MM Deku Playground Reward All Days",
+        "MM Great Bay Great Fairy",
+        "MM Honey & Darling Reward All Days",
+        "MM Ikana Great Fairy",
+        "MM Initial Song of Healing",
+        "MM Laboratory Zora Song",
+        "MM Moon Fierce Deity Mask",
+        "MM Mountain Village Frog Choir HP",
+        "MM Ocean Spider House Wallet",
+        "MM Southern Swamp Song of Soaring",
+        "MM Snowhead Great Fairy",
+        "MM Stock Pot Inn Couple\'s Mask",
+        "MM Swamp Spider House Mask of Truth",
+        "MM Town Archery Reward 2",
+        "MM Waterfall Rapids Beaver Race 2",
+        "MM Woodfall Great Fairy"]
+
+    HintList = [{"type": "foolish",
+                 "amount": 4,
+                 "extra": 1},
+                {"type": "always",
+                 "amount": "max",
+                 "extra": 1},
+                {"type": "sometimes",
+                 "amount": 3,
+                 "extra": 1},
+                {"type": "woth",
+                 "amount": 4,
+                 "extra": 1},
+                {"type": "sometimes",
+                 "amount": "max",
+                 "extra": 1}]
+
+    HintToInsertBefore = {"type": "woth",
+                          "amount": 4,
+                          "extra": 1}
+
+    HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
+
+    MoonConditions = {"count": 4,
+                      "stones": False,
+                      "medallions": False,
+                      "remains": True,
+                      "skullsGold": False,
+                      "skullsSwamp": False,
+                      "skullsOcean": False,
+                      "fairiesWF": False,
+                      "fairiesSH": False,
+                      "fairiesGB": False,
+                      "fairiesST": False,
+                      "fairyTown": False,
+                      "masksRegular": False,
+                      "masksTransform": False,
+                      "masksOot": False,
+                      "triforce": False,
+                      "coinsRed": False,
+                      "coinsGreen": False,
+                      "coinsBlue": False,
+                      "coinsYellow": False}
+
+    StartingItems = {
+        "MM_OCARINA": 1,
+        "MM_SONG_SOARING": 1,
+        "MM_SONG_TIME": 1
+    }
+
+    preCompletedDungeons = False
+    preCompletedDungeonsRemains = 0
+
+    RandomStartingItem = random.choices(
+        ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_DEITY", "MM_BOW", "MM_HOOKSHOT", "MM_BOMB_BAG",
+         "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_MAGIC_UPGRADE"],
+        [5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5])[0]
+    if RandomStartingItem != "none":
+        StartingItems[RandomStartingItem] = 1
+    RandomStartingSong = random.choices(
+        ["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON", "MM_SONG_ZORA",
+         "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0]
+    if RandomStartingSong == "none":
+        JunkList.remove("MM Southern Swamp Song of Soaring")
+    else:
+        StartingItems[RandomStartingSong] = 1
+        if RandomStartingSong == "MM_SONG_ORDER":
+            MoonConditions["count"] = 0
+            MoonConditions["remains"] = False
 
     while HardCounter > HARDMODELIMIT:
         HardCounter = 0
@@ -359,10 +360,10 @@ settings_data = {
     "erIndoors": InteriorER[0],
     "erIndoorsMajor": InteriorER[1],
     "erIndoorsExtra": InteriorER[1],
-    "erOneWays": OverworldER[0],
-    "erOneWaysMajor": OverworldER[1],
-    "erOneWaysIkana": OverworldER[1],
-    "erOneWaysAnywhere": OverworldER[1],
+    "erOneWays": False,
+    "erOneWaysMajor": False,
+    "erOneWaysIkana": False,
+    "erOneWaysAnywhere": False,
     "startingItems": StartingItems,
     "junkLocations": JunkList,
     "tricks": ["MM_EVAN_FARORE",
@@ -396,7 +397,6 @@ settings_data = {
                    "coinsGreen": False,
                    "coinsBlue": False,
                    "coinsYellow": False}},
-    "plando": {"locations": {"MM Initial Song of Healing": "MM_SONG_TIME"}},
     "hints": HintList,
 }
 

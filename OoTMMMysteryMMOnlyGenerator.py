@@ -3,7 +3,7 @@ import base64
 import json
 import random
 
-MinMysterySettings = 5
+MinMysterySettings = 7
 MysteryCount = 0
 HardModeBalance = False
 

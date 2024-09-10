@@ -204,7 +204,8 @@ while MysteryCount < MinMysterySettings:
     SongShuffle = random.choices(["songLocations", "anywhere"], [65, 35])[0]
     if SongShuffle == "anywhere":
         MysteryCount += 1
-        JunkList.remove("MM Southern Swamp Song of Soaring")
+        if "MM Southern Swamp Song of Soaring" in JunkList:
+            JunkList.remove("MM Southern Swamp Song of Soaring")
         if "MM Clock Tower Roof Skull Kid Song of Time" not in JunkList:
             JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
             JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")

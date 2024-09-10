@@ -138,7 +138,6 @@ while MysteryCount < MinMysterySettings:
                         "item":"MM_CLOCK6"})
 
 
-
         BossSoulsWeight = [10, 90]
         if BKeyShuffle == "anywhere":                                               #Having both Boss Souls and BK anywhere sounds like hell
             BossSoulsWeight[1] += BossSoulsWeight[0]
@@ -162,10 +161,19 @@ while MysteryCount < MinMysterySettings:
             JunkList.append("MM Goron Race")
             
 
-        FriendSoulShuffle = random.choices([True, False], [8, 92])[0]
-        if FriendSoulShuffle == True:
+        FriendSoulShuffle = False
+        EnemySoulShuffle = False
+        SoulShuffle = random.choices(["none", "friends", "enemies", "both"], [85, 5, 10, 0])[0]
+        if SoulShuffle != "none":
             MysteryCount += 1
             HardCounter += 1
+            if SoulShuffle == "friends":
+                FriendSoulShuffle = True
+            elif SoulShuffle == "enemies":
+                EnemySoulShuffle = True
+            else:
+                FriendSoulShuffle = True
+                EnemySoulShuffle = True
             
         LongQuest = random.choices(["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"], [35, 20, 15, 30])[0]
         if LongQuest != "none" and LongQuest in JunkList:
@@ -176,7 +184,7 @@ while MysteryCount < MinMysterySettings:
         InteriorER = ["none", False]
         RegionsER = "none"
         #Overworld and Interior ER last because screw it
-        EntranceRandomizer = random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [75, 15, 4, 4, 2])[0]
+        EntranceRandomizer = random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [70, 15, 6, 6, 3])[0]
         if EntranceRandomizer == "Regions Only":            #Not Hard due to only 5 entrances shuffling
             MysteryCount += 1
             RegionsER = "full"
@@ -325,7 +333,7 @@ settings_data = {
 "tunicZoraMm":True,
 "scalesMm":True,
 "strengthMm":True,
-"soulsEnemyMm":False,
+"soulsEnemyMm":EnemySoulShuffle,
 "soulsBossMm":SharedBossSoulShuffle,
 "soulsNpcMm":FriendSoulShuffle,
 "soulsMiscMm":False,

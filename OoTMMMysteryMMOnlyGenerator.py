@@ -56,6 +56,27 @@ HintToInsertBefore = {"type":"playthrough",
 
 HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
 
+MoonConditions = {"count":4,
+"stones":False,
+"medallions":False,
+"remains":True,
+"skullsGold":False,
+"skullsSwamp":False,
+"skullsOcean":False,
+"fairiesWF":False,
+"fairiesSH":False,
+"fairiesGB":False,
+"fairiesST":False,
+"fairyTown":False,
+"masksRegular":False,
+"masksTransform":False,
+"masksOot":False,
+"triforce":False,
+"coinsRed":False,
+"coinsGreen":False,
+"coinsBlue":False,
+"coinsYellow":False}
+
 StartingItems = {
 "MM_OCARINA":1,
 "MM_SONG_SOARING":1,
@@ -67,6 +88,14 @@ if RandomStartingItem != "none":
 RandomStartingSong = random.choices(["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON", "MM_SONG_ZORA", "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0,40,10,10,10,10,10,10,0])[0]
 if RandomStartingSong != "none":
     StartingItems[RandomStartingSong] = 1
+    if RandomStartingSong == "MM_SONG_ORDER":
+        HintList.remove({"type":"item",
+            "amount":1,
+            "extra":1,
+            "item":"MM_SONG_ORDER"})
+        MoonConditions["count"] = 0
+        MoonConditions["remains"] = False
+
 
 while MysteryCount < MinMysterySettings:
     MysteryCount = 0
@@ -327,26 +356,7 @@ settings_data = {
 "MM_ZORA_HALL_SCRUB_HP_NO_DEKU"
 ],
 "specialConds":{
-"MOON":{"count":4,
-"stones":False,
-"medallions":False,
-"remains":True,
-"skullsGold":False,
-"skullsSwamp":False,
-"skullsOcean":False,
-"fairiesWF":False,
-"fairiesSH":False,
-"fairiesGB":False,
-"fairiesST":False,
-"fairyTown":False,
-"masksRegular":False,
-"masksTransform":False,
-"masksOot":False,
-"triforce":False,
-"coinsRed":False,
-"coinsGreen":False,
-"coinsBlue":False,
-"coinsYellow":False},
+"MOON": MoonConditions,
 "MAJORA":{"count":4,
 "stones":False,
 "medallions":False,

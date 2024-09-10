@@ -27,6 +27,35 @@ JunkList = [
 "MM Waterfall Rapids Beaver Race 2",
 "MM Woodfall Great Fairy"]
 
+HintList = [{"type":"foolish",
+"amount":8,
+"extra":1},
+{"type":"always",
+"amount":"max",
+"extra":1},
+{"type":"sometimes",
+"amount":3,
+"extra":1},
+{"type":"item",
+"amount":1,
+"extra":1,
+"item":"MM_SONG_ORDER"},
+{"type":"playthrough",
+"amount":4,
+"extra":1},
+{"type":"woth",
+"amount":9,
+"extra":1},
+{"type":"sometimes",
+"amount":"max",
+"extra":1}]
+
+HintToInsertBefore = {"type":"playthrough",
+"amount":4,
+"extra":1}
+
+HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
+
 StartingItems = {
 "MM_OCARINA":1,
 "MM_SONG_SOARING":1,
@@ -54,10 +83,8 @@ while MysteryCount < MinMysterySettings:
 
         SKeyShuffleWeight = [60, 30, 10]
         SKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], SKeyShuffleWeight)[0]
-
         BKeyShuffleWeight = [60, 30, 10]
         BKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], BKeyShuffleWeight)[0]
-
         if SKeyShuffle != "removed" or BKeyShuffle != "removed":
             MysteryCount += 1
             if (SKeyShuffle == "anywhere" and BKeyShuffle == "anywhere"):
@@ -68,10 +95,16 @@ while MysteryCount < MinMysterySettings:
         if ClockShuffle == True:
             HardCounter += 1
             MysteryCount += 1
-            ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], [20, 30, 50])
+            ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], [20, 30, 50])[0]
             if ClockProgressiveSetting == "separate":
-                StartingClock = random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"], [10, 10, 10, 10, 10, 10])
+                StartingClock = random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"], [10, 10, 10, 10, 10, 10])[0]
                 StartingItems[StartingClock] = 1
+                if StartingClock != "MM_CLOCK6":
+                    HintList.insert(HintIndex, {"type":"item",
+                        "amount":1,
+                        "extra":1,
+                        "item":"MM_CLOCK6"})
+
 
 
         BossSoulsWeight = [10, 90]
@@ -85,7 +118,6 @@ while MysteryCount < MinMysterySettings:
 
         FreestandingShuffle = random.choices([True, False], [20, 80])[0]
         WonderSpotShuffle = random.choices([True, False], [20, 80])[0]
-
         if FreestandingShuffle != False or WonderSpotShuffle != False:
             MysteryCount += 1
             if FreestandingShuffle != False and WonderSpotShuffle != False:
@@ -239,6 +271,7 @@ settings_data = {
 "climbMostSurfacesMm":False,
 "fillWallets":True,
 "progressiveGoronLullaby":"single",
+"progressiveClocks":ClockProgressiveSetting,
 "bottleContentShuffle":True,
 "shortHookshotMm":True,
 "childWallets":NoWalletShuffle,
@@ -335,28 +368,7 @@ settings_data = {
 "coinsBlue":False,
 "coinsYellow":False}},
 "plando":{"locations":{"MM Initial Song of Healing":"MM_SONG_TIME"}},
-"hints":[{"type":"foolish",
-"amount":8,
-"extra":1},
-{"type":"always",
-"amount":"max",
-"extra":1},
-{"type":"sometimes",
-"amount":3,
-"extra":1},
-{"type":"item",
-"amount":1,
-"extra":1,
-"item":"MM_SONG_ORDER"},
-{"type":"playthrough",
-"amount":4,
-"extra":1},
-{"type":"woth",
-"amount":9,
-"extra":1},
-{"type":"sometimes",
-"amount":"max",
-"extra":1}]
+"hints":HintList,
 }
 
 # Convert the settings into a JSON string (or similar format if required)
@@ -378,8 +390,7 @@ seed_string = f"v1.{encoded_data}"
 print("Encoded Seed String:")
 print(seed_string)
 
-seed_string = "v1.eJztV02TozYQ/SsUh+Qyh+zuJJXsDWP8kbGNCzxxZbemKBnattZCoiQxXmpq/3taAgx4fMhe5jQn0OtGH69ft5oX90ByUO5nN8/dO/cgCDPv5JuQBMfwXUsyo1xHcKCCo5+WJdy5R4TmeSGkJjyFFtWUHxjEx3K/Zwi6ShNpMJwoJ4Uv8oIoddO8E0o9QNXYljlaJeTiGTI0KtxDNSFUVv4RlL45QecT6iPIzofw6owAGJ8anEiAqCwAlFmn3nnPNAOc9LVpK3gGcq4hf22LuTjvCGM9S8pwmlgTDeOSHwCps4faCX20bBh+/SNlGYJpqbQw7O9x+TglElIpzt1ceb6W4KWaPuN0WXhmGIYXV1eFOR8X3JztmbDShPErrizSkxZn7j79wH2oPI1PJWO6ZOSyOQR9cW6HJ4DCHiwCBbpF90TpJVGnS8z3FGQKY6C68lpSLybGtkgA6It3IcVBglL0GaZCCr7APZBdZaJmVeIOXHyzaaNCBQWReEyrCa0Z+IJr4F3QW+JRejMhTviie6wLhkIi13vZiXyXHssROfRCVwBjEyrhCtpSnl1BC9RhB+2E0GqOJ7qCZuglO0yXnKb25FfYF4x8b4GUsIEQtQR+0Me+kmpq6hEDTg0dBT2ZcO8JU4iCHOG5kb49smzSVraq62NTiYyKAbQ0Qux86zUwfQqKYp+JUkEPXVMTmQkyb6LW4SPgQPRxi1R14PxEOPFRQ13QcF5UNmAsJeVdKJsktgo0wl4ukzhcTZNgHa489/OHO4MsvfghmYZRuGqReDYPFuNkFkRhC4W+F827b+JtGI0vAzNlHBqHaYv5i9B/+DAYfRqMfh+MPg5G94PRHzjCdPtW8tNCpETXxfIr2p0xnEpnzUh1kKLkmRPBmcjM8RhzxqRSrpnEmUqk0BmRqnmzpaw2zTDDK+cXdJYMebr9vaX79bcLskO5aSErx+jOiYWtlmhZCsGdiU1px+a0Y5K9toUpEO7UInCsCpw6o2qzKXdHINnr5WJRmuqL355JXtjVHLHHJ5G0XTjWqGdnLbQz59zxRVkw+FX1Vm++7a9ujGaijSxt/USvDVY4x5MpLle1lHysTVtUqcTMYE5EcBbljIBgbuIIz9r6CJFZl/4ZnjBFJbXZZiKXBP94q2TiRWEU2K+SRbCK67dVmMSBNwujuDGFq6AWabwxr5twG0S1Ze0tPD9IRgFOFj/M126jx8cNahehrbdcJ7EfPY6S2brRuHXZPK7mfrPelzDykpm3WHSeuIVx8PBodo1lKqWEYa3MbAqNovl4Gpi3FCWHJf03k2eoo65k5JDh8WuZNhDeuIT2xsrcG2oqzCU1gGyErjCrmQu2Rz4pqO3kGoln18h09MpnM0AqE+pu3+ZKwm4ErzM5BDeScLUXMh/CodAXAKOLDqZhaYBU4IEjyIYAagL4EBrh9TpE/sVyZ+5Qi2HqL0NTmy6M3/8U400pfCf8JwjHrIrfJf6WjE+9VbhKRg/vrL9pYfH+xuL/XlrejHLkvGCEZ8Jwzrpu7sU2WpxqvGovvQ3+LpquDJvqtsnczJeBayYxP8mmlbj8q+2FYFSZBobkdSj/bH6xbfd48SPsXDd2rRue/rt701WJHDQ1f/Cd96ebnhT7657Th87prrZ1J8C2GZuX3rdIR6WP2L4e+pu/v7nOuf7FbZ3++t/bvj7k04//AOICtso="
-
+seed_string = "v1.eJztV01vo0gQ/SuIw55y2NkdrXZzA4yNN7axwBlrZxShCpTtHjfdVncTD4rmv281GIOdSLu55JQT8OrRVL/66OLZ3UKJ2r11y9K9cbcSuL2H71IBPeMPoyBiwiS4ZVIQz6gKb9wdQdPyIJUBkWOHaim2dikQ9XGHCmkBw8SWY7qrNhtOPFcbUBYjUwmHQJYH0PpVs6Yv12Ngqg52qM1/cGJDH+w5Ckv5hIWltFigwKCel2dXW9gHpZAP8JwjqNQQeVSJLdKWrc19lGbXuGx1CXaMFwTmlTbSqrZRiGkOCnMlj/1aZblU6OWGPdFyRXzkpM2za+qD9VBIYfV5Al5Z+b/Rl2W+N/Io3Ief5Icu83RfcW4qDmfnCAzksXvcIx6mBkudoEbToRvQZg56f47VhqHKcYTM1F4XmLOJ8zVwjubMPii5Vag1e8KJVFLMyAd4rK3uTSjdC0pgnbYh13gAKzGZSStDgkthUPRh62SnlImk3NONGaguudQarn15lOVjvqt82A4Cd0DOx0zhFbRmoriCZpQCPfQopdFT2tEVFBFL9ZipBMubnV9hXynygw/kwC/yySgUW7MbZlIrTfvEUTArx4Htbbg3wDWhqHzaN8m3IZVtuaku64bYRJGi8gKa20Tsue03qAAOrEAVyUrjAF0yG5kxKW+j1uM+CgSzW5NUPTjdg4CAcqgPGq1LmY0US8VEH8pTGTYZaBN7Ps/mXnqX+TMvXbm3n24sksaLSRYu44V3RqJpOBtlUZjEHRQHXjIdMNZxMrpYII0tYUIYlcb3SuxnMgfTNqRvxHJGuK+cJYd6q2QlCifBI6jC8Th3RlBr1y7lTBRt1/GhPt01jaM1RVSNtfMLkRWnPb3+fiPNy3dn8EipYaSqHZsjTiqb3kSWuZTCGTfl5zT159jC7GyVMMCE84VqELbojKmqnGAnmXKiZcuJcwThtEF1mqg6bYW05lRIqmYoXrqUysr2Q3r3COWh8ciRG7qCYp1zJ9Nwceud5a1U1bQ7Yq2oITmeymm1ulPlt9a0pqRSlMjcSYBW0Y6PQKVET7TdjiNl0VCGLj5QRSnWFIcNXhZ+8RbZ2EviJGzeymbhIm3vFnGWhl4UJ+nJFC/CNsvSlb1dxeswaS1Lb+YFYeaHtFh6N20lpMy5X1GqEbT25sssDZJ7P4uW2SRO4kVLWd0vpsHpe1/jxMsibzbrmeTCKLy7t15TV8kZcGptRZPxfjIdTUJ7l9toure/2rKgVOorvMSCtt9m6gmis4ni3j9r2+b1RNoz5QJqInSFNSlxxjakJ0O9Hl8jaXSNTPwXnNUFUttQ937bE4QOfTp91CW4UiD0RqryEo6lOQMUXSLYueAE5JI2nGBxCVBOoLiEfDoNL5F/qDvZI6/BqPrnMcWtV/zzmxQ/da4Pwd8gOFVV+pHi76n4xFvEi8y/+1D9XRuL9zc1/4/W8m6Sk+YHDqKQVnPeD3TPzawlmKGj9jy6RAh2MKMZuJsJV9N56NpF7L+oHSXOv1YbKTnTdoCBsg3ln6c/2WaAPPOAH9vZrqPR7n+4r1K1LNEw+6Pcs39/lcloHB6QPvWkm9bW74CmXBpe3vxuMIuDuz+G75GMtdnR5Lsdbvrzq/4d2z/ZjvTX/97utTgPP/8FtlaZDA=="
 # Remove the 'v1.' prefix
 if seed_string.startswith('v1.'):
     seed_string = seed_string[3:]

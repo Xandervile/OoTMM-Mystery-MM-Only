@@ -5,7 +5,7 @@ import random
 
 MinMysterySettings = 5
 MysteryCount = 0
-HardModeReached = False
+HardModeBalance = False
 
 #HarderSettings get rolled first to allow limitations
 HARDMODELIMIT = 2
@@ -81,6 +81,9 @@ StartingItems = {
 "MM_OCARINA":1,
 "MM_SONG_SOARING":1,
     }
+
+preCompletedDungeons = False
+preCompletedDungeonsRemains = 0
 
 RandomStartingItem = random.choices(["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_DEITY", "MM_BOW", "MM_HOOKSHOT", "MM_BOMB_BAG", "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_MAGIC_UPGRADE"], [5,10,10,10,10,10,10,5,5,10,5,5,5])[0]
 if RandomStartingItem != "none":
@@ -173,7 +176,7 @@ while MysteryCount < MinMysterySettings:
         InteriorER = ["none", False]
         RegionsER = "none"
         #Overworld and Interior ER last because screw it
-        EntranceRandomizer = random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [80, 10, 4, 4, 2])[0]
+        EntranceRandomizer = random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [75, 15, 4, 4, 2])[0]
         if EntranceRandomizer == "Regions Only":            #Not Hard due to only 5 entrances shuffling
             MysteryCount += 1
             RegionsER = "full"
@@ -193,16 +196,18 @@ while MysteryCount < MinMysterySettings:
             
         #To add: Decoupled? - This would by itself make the Hard Counter explode
         #Also to add: Mixed?
-        
+
 
     #Other Settings get Randomized here
     SongShuffle = random.choices(["songLocations", "anywhere"], [65, 35])[0]
     if SongShuffle == "anywhere":
         MysteryCount += 1
 
+    TownFairy = "vanilla"
     StrayFairyShuffle = random.choices(["removed","anywhere"], [70, 30])[0]
     if StrayFairyShuffle != "removed":
         MysteryCount += 1
+        TownFairy = "anywhere"
             
     NoStartingWeapon = random.choices([True, False], [25, 75])[0]
     if NoStartingWeapon == False:
@@ -212,7 +217,7 @@ while MysteryCount < MinMysterySettings:
     ExtraDungeonEntranceShuffle = False
     erDungeons = random.choices(["none", "full"], [45, 55])[0]
     if erDungeons == "full":
-        ExtraDungeonEntranceShuffle = random.choices([True, False], [50, 50])[0]
+        ExtraDungeonEntranceShuffle = random.choices([True, False], [40, 60])[0]
 
     BossEntranceShuffle = random.choices(["none","full"],[70, 30])[0]
     if BossEntranceShuffle == "full" or erDungeons == "full":
@@ -250,7 +255,10 @@ while MysteryCount < MinMysterySettings:
     NoWalletShuffle = random.choices([True, False], [30, 70])[0]
     if NoWalletShuffle == True:
         MysteryCount += 1
-        
+
+    if HardCounter >= HARDMODELIMIT and HardModeBalance == True:
+        preCompletedDungeons = True
+        preCompletedDungeonsRemains = random.choices([1, 2], [80, 20])[0]
 
         
 
@@ -266,7 +274,7 @@ settings_data = {
 "mapCompassShuffle":"starting",
 "smallKeyShuffleMm":SKeyShuffle,
 "bossKeyShuffleMm":BKeyShuffle,
-"townFairyShuffle":"vanilla",
+"townFairyShuffle":TownFairy,
 "strayFairyChestShuffle":"starting",
 "strayFairyOtherShuffle":StrayFairyShuffle,
 "dungeonRewardShuffle":"dungeonbluewarps",
@@ -289,6 +297,8 @@ settings_data = {
 "beneathWell":"vanilla",
 "majoraChild":"custom",
 "freeScarecrowMm":True,
+"preCompletedDungeons":preCompletedDungeons,
+"preCompletedDungeonsRemains":preCompletedDungeonsRemains,
 "mmPreActivatedOwls":{"type":"none",
 "values":["clocktown"]},
 "csmcSkulltula":True,
@@ -400,7 +410,7 @@ seed_string = f"v1.{encoded_data}"
 print("Encoded Seed String:")
 print(seed_string)
 
-# Decoding Part
+#seed_string = "v1.eJztV01zm0gQ/SsUhz35sMnmsOsbSEhoLYEK5KiSlItqQ0uaaJhRzQxWKFf++/aAEEj2bm0uPvkEvH7M9Mebpnl2t1Cidm/dsnRv3K0Ebu/hu1RAz/jDKAiZMAlumRTEM6rCG3dH0Kw8SGVA5Nihhoktx3RXbTacQFcbUBajhUo4jGR5AK1fNesSOL/D+mRclGRWWMonLMj6KLX+V6MmD+sJMFXHZoeqX76n5PI4eLf1VbfASIFB/QL2QSnkAzznCCo1RB5XYouUisaNR2l2TXQ2X6Md4wWBeaWNtNncKMQ0B4W5ksd+rYNCmwuOBotutf+yJVgCs5SPtFO5VOjlhj2RK0V85AQ/u6Y+2IiFFEjbPgGvbEm/kdcy3xt5FO7DT4pBl3m6rzg3FYdzYASO5LF73CMeZgZL2lSj6dANaLMAvT+7uWGochwjM7Un6iPlHXsT52uqJppBUHKrUGv2hFOppJiTD/BYWwk0imlKbAxVQwqDwpxr2NWEdBZKuacbMyiJ5KQLuN7sUZaP+a7yYTuo6gE5nzCFV9CaieIKmpNmeuhRSqNn5PIVFBJL9ZipBMub0K6wrySLwQY58AuxGYVia3YDRFZc+xRWD3EUzObkwPa2qBvgmlBUlkUZ3FAu7UFVvZJ6bKoorfICWlipXquuO4lN5a2gFots4aV3mX8fRV/c2w83FknjaJoFyzjyzkg4C+bjLAySuIPikZfMBox1nIwvFkhjS5gSRpL8Xon9XOZg2ubyjVjOGPeVs+RQb5WsROEkeARVOB7nzhhq7dqlnKlCMI4P9emuaQCtKaRTUDu/EVlxiun192d7EPDy3YWUwpk04nYadTtW9p2tEoYOovOZFA5bdCYka2e0k0w54bLlxDmCcKhWBRIoK41OK8/WnApJZwWKlxunsrLdi949QnmgR3JcbugKqu2QltOahotb7yxvpaqmERFrRcfd8VROq9Vd7B9b05p6hiIBcScBWkU7PgLpmJ4o3I4jZdFQhi4+kJwVy/enEmXBZy/KJl4SJ0HzVjYPorS9i+IsDbwwTtKTKY6CVkvpyt6u4nWQtJalN/dGQeYHtFh6N2tTSPq4X5GgCFp7i2WWjpJ7PwuX2TRO4qilrO6j2ei039c48bLQm897JrkwDu7urdd0pHMGnPpK0ejaT2bjaWDvcltN9/Z3K34STH+ySiwo/FaPJ0h1Dfj0rG0T1VNpu/0F1FToCmskccY2lE+Gej25RtLwGpn6LzirC6S2pe79tv2ZPtPU29UluFIg9Eaq8hKOpTkDVF0i2C/5Ccglsx+e4hIgTaC4hHz61lwiX6iL2g9Kg9EZX8RUtz7jn34p46f+9J7wX0g4nar0XeJvmfGpF8VR5t+9Z/1NG4v3NzX/99byZimnnB84iELanPN+bHtuJirBDH1qz6NLiGDHL5o9u8lvNVsErl3E/j3aUeL847KRkjNtBxgo21L+efr3bMbEMw/4sZ3gOhpF/8N9lapliYbZX9ue/cerTEZD74D0oSfdtLY+ApplaXgZvEvpqM2O5tTt0PlPr+5zbP8VO9Jf/9vt6yAffv4DK8tsog=="
 # Remove the 'v1.' prefix
 #if seed_string.startswith('v1.'):
 #    seed_string = seed_string[3:]

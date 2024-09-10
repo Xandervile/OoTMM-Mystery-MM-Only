@@ -400,25 +400,25 @@ seed_string = f"v1.{encoded_data}"
 print("Encoded Seed String:")
 print(seed_string)
 
-seed_string = "v1.eJztV01vo0gQ/SuIw55y2NkdrXZzA4yNN7axwBlrZxShCpTtHjfdVncTD4rmv281GIOdSLu55JQT8OrRVL/66OLZ3UKJ2r11y9K9cbcSuL2H71IBPeMPoyBiwiS4ZVIQz6gKb9wdQdPyIJUBkWOHaim2dikQ9XGHCmkBw8SWY7qrNhtOPFcbUBYjUwmHQJYH0PpVs6Yv12Ngqg52qM1/cGJDH+w5Ckv5hIWltFigwKCel2dXW9gHpZAP8JwjqNQQeVSJLdKWrc19lGbXuGx1CXaMFwTmlTbSqrZRiGkOCnMlj/1aZblU6OWGPdFyRXzkpM2za+qD9VBIYfV5Al5Z+b/Rl2W+N/Io3Ief5Icu83RfcW4qDmfnCAzksXvcIx6mBkudoEbToRvQZg56f47VhqHKcYTM1F4XmLOJ8zVwjubMPii5Vag1e8KJVFLMyAd4rK3uTSjdC0pgnbYh13gAKzGZSStDgkthUPRh62SnlImk3NONGaguudQarn15lOVjvqt82A4Cd0DOx0zhFbRmoriCZpQCPfQopdFT2tEVFBFL9ZipBMubnV9hXynygw/kwC/yySgUW7MbZlIrTfvEUTArx4Htbbg3wDWhqHzaN8m3IZVtuaku64bYRJGi8gKa20Tsue03qAAOrEAVyUrjAF0yG5kxKW+j1uM+CgSzW5NUPTjdg4CAcqgPGq1LmY0US8VEH8pTGTYZaBN7Ps/mXnqX+TMvXbm3n24sksaLSRYu44V3RqJpOBtlUZjEHRQHXjIdMNZxMrpYII0tYUIYlcb3SuxnMgfTNqRvxHJGuK+cJYd6q2QlCifBI6jC8Th3RlBr1y7lTBRt1/GhPt01jaM1RVSNtfMLkRWnPb3+fiPNy3dn8EipYaSqHZsjTiqb3kSWuZTCGTfl5zT159jC7GyVMMCE84VqELbojKmqnGAnmXKiZcuJcwThtEF1mqg6bYW05lRIqmYoXrqUysr2Q3r3COWh8ciRG7qCYp1zJ9Nwceud5a1U1bQ7Yq2oITmeymm1ulPlt9a0pqRSlMjcSYBW0Y6PQKVET7TdjiNl0VCGLj5QRSnWFIcNXhZ+8RbZ2EviJGzeymbhIm3vFnGWhl4UJ+nJFC/CNsvSlb1dxeswaS1Lb+YFYeaHtFh6N20lpMy5X1GqEbT25sssDZJ7P4uW2SRO4kVLWd0vpsHpe1/jxMsibzbrmeTCKLy7t15TV8kZcGptRZPxfjIdTUJ7l9toure/2rKgVOorvMSCtt9m6gmis4ni3j9r2+b1RNoz5QJqInSFNSlxxjakJ0O9Hl8jaXSNTPwXnNUFUttQ937bE4QOfTp91CW4UiD0RqryEo6lOQMUXSLYueAE5JI2nGBxCVBOoLiEfDoNL5F/qDvZI6/BqPrnMcWtV/zzmxQ/da4Pwd8gOFVV+pHi76n4xFvEi8y/+1D9XRuL9zc1/4/W8m6Sk+YHDqKQVnPeD3TPzawlmKGj9jy6RAh2MKMZuJsJV9N56NpF7L+oHSXOv1YbKTnTdoCBsg3ln6c/2WaAPPOAH9vZrqPR7n+4r1K1LNEw+6Pcs39/lcloHB6QPvWkm9bW74CmXBpe3vxuMIuDuz+G75GMtdnR5Lsdbvrzq/4d2z/ZjvTX/97utTgPP/8FtlaZDA=="
+# Decoding Part
 # Remove the 'v1.' prefix
-if seed_string.startswith('v1.'):
-    seed_string = seed_string[3:]
+#if seed_string.startswith('v1.'):
+#    seed_string = seed_string[3:]
 
 # Add padding back if needed
-seed_string += '=' * (-len(seed_string) % 4)
+#seed_string += '=' * (-len(seed_string) % 4)
 
 # Base64 decode
-decoded_bytes = base64.urlsafe_b64decode(seed_string)
+#decoded_bytes = base64.urlsafe_b64decode(seed_string)
 
 # Decompress using zlib
-decompressed_bytes = zlib.decompress(decoded_bytes)
+#decompressed_bytes = zlib.decompress(decoded_bytes)
 
 # Convert bytes to JSON string
-settings_json = decompressed_bytes.decode('utf-8')
+#settings_json = decompressed_bytes.decode('utf-8')
 
 # Parse the JSON string into Python dictionary
-settings_data = json.loads(settings_json)
+#settings_data = json.loads(settings_json)
 
 # Print the result
-print(settings_data)
+#print(settings_data)

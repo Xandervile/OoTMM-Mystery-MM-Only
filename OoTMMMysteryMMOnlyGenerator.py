@@ -83,7 +83,9 @@ RandomStartingItem = random.choices(["none", "MM_MASK_DEKU", "MM_MASK_GORON", "M
 if RandomStartingItem != "none":
     StartingItems[RandomStartingItem] = 1
 RandomStartingSong = random.choices(["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON", "MM_SONG_ZORA", "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0,40,10,10,10,10,10,10,0])[0]
-if RandomStartingSong != "none":
+if RandomStartingSong == "none":
+    JunkList.remove("MM Southern Swamp Song of Soaring")
+else:
     StartingItems[RandomStartingSong] = 1
     if RandomStartingSong == "MM_SONG_ORDER":
         MoonConditions["count"] = 0

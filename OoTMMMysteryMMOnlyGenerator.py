@@ -44,7 +44,7 @@ HintList = [{"type":"foolish",
 "amount":"max",
 "extra":1}]
 
-HintToInsertBefore = {"type":"playthrough",
+HintToInsertBefore = {"type":"woth",
 "amount":4,
 "extra":1}
 

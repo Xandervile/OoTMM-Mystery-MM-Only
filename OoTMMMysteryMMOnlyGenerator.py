@@ -90,16 +90,16 @@ while MysteryCount < MinMysterySettings:
     RandomStartingItem = random.choices(
         ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_FIERCE_DEITY", "MM_BOW", "MM_HOOKSHOT",
          "MM_BOMB_BAG",
-         "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_MAGIC_UPGRADE"],
-        [5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5])[0]      #[5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5]
+         "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_WALLET", "MM_MAGIC_UPGRADE"],
+        [0, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 10, 0])[0]
     if RandomStartingItem != "none":
         StartingItems[RandomStartingItem] = 1
 
     RandomStartingSong = random.choices(
-        ["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
+        ["MM_RECOVERY_HEART", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
          "MM_SONG_ZORA",
          "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0] #[0, 40, 10, 10, 10, 10, 10, 10, 0]
-    if RandomStartingSong == "none":
+    if RandomStartingSong == "MM_RECOVERY_HEART":
         JunkList.remove("MM Southern Swamp Song of Soaring")
     if RandomStartingSong == "MM_SONG_ORDER":
         MoonConditions["count"] = 0
@@ -281,7 +281,11 @@ while MysteryCount < MinMysterySettings:
     if GrottoShuffle == "full":
         MysteryCount += 1
 
-    NoWalletShuffle = random.choices([True, False], [30, 70])[0]
+    WalletShuffleWeight = [30, 70]
+    if RandomStartingItem == "MM_WALLET":
+        WalletShuffleWeight[1] += WalletShuffleWeight[0]
+        WalletShuffleWeight[0] = 0
+    NoWalletShuffle = random.choices([True, False], WalletShuffleWeight)[0]
     if NoWalletShuffle == True:
         MysteryCount += 1
 
@@ -437,7 +441,7 @@ seed_string = f"v1.{encoded_data}"
 print("Encoded Seed String:")
 print(seed_string)
 
-#seed_string = "v1.eJztV02P4jgQ/StWDruXPuzXqW8BAsnyEZTQg2ZGrcgkBWRwXMh2mola89+nnJAEaHalufSpL2C/KtvlV89l59XZ8QK08+gUhfPg7JAL2+bfUHHqw3ejuJ9LE8EuR0l+RpXw4OwJCoojKsNlCi1qcrkTEO/L7VYQ6GjDlcVoooIfh1gcudZ3zbrgQkyhOhvnBZkVFPgCGVk3qPV/GjVFWI15rqrhHrS5P33nE5o9qN7nYpoGGypuQNslmi2d4QFXCsRbfI0yAxUYKN7aYomnDW3rwpIK4Co2tMSolDsgQuvNbNDsa44s68N9LjIC01IbtDnZKoA45QpShad+rqJYKnBTk7/QdFl4EpScV8dUR7sviRJo6AsXpU3uV1oZ04PBk3Sef1AcukjjQymEKQXvgiNwiKe2ewA41huLQINp0S3XZs71oVPCNgeVwghyU7myOhG70JuEWBMBYDrvo8KdAq3zF5igQjmjGPimstmqtVMn2xjKA0oDss9myywpzkc8UMNc0Gopu1kpRUGq4bcBbLDYpPtywHcX+TqCEONcwQ20zmV2A81ILT20QTQ6oG3cQD55qR4zpczTers32BdK98UCKRdX0jMK5M7sLxAshfYkFFWPCZC5JeqYH2ymt1zoemyj/TqBVhfzeRIO3ShYuM7jnw+2G4eLCf1YbHKFrYK51wJzN54mIy9Yfe5c1mE06jp+4M1Gie9F4dWIceBFQ68bSIr7VsrDDFNumirylVzZCA4lWwpe7RSWMmMRnLjKmCsEG/FKO3Y+NlHADRvw6tyqT3Fj8knkFfuNnJWgvd4fHxy45G/HzviGyDeoKmazwGKsCwVZ5oiSjWtVs1rWzOq9tZXS8FyyTyRtvgM2Jj2z4R5zxfxl4xOmwCWjfFBhoBBLDazRYGO2VWEPPHsbUoylLU409sSLYx0Rwy39c5W3wcWGjjFbomGBlGyI5VHA7/oiwvPYy9Wt0U60UmVdZshrRYWAuSql5aqWtr8a05qqiSIVCRZxmkWzAXBSM/WIj9YHMatdLvfwTKJWeXo4ZzfxPrmLZOxGYeTVo5KZt4ib1iJMYs/1wyg+m8KF1wgnXtnmKlx7UWNZujOXlDTwaLJ4GjQck06fViQ6gtbufJnEw+hpkPjLZBJG4aJxWT0tguF5vS9h5Ca+O5v1nhTCyJs+2ajpYKc5F1RxsvqoDKJgNPFsK7Xpdh7/sOeJtNYfrwIy2n4j5TNENwkJ4+IE2vKqJ2hr+RVUZ+gGqzXTYVviMwe9Ht8isX+LTAZvfFZXSGVT3cdtKzdd5VT11TW4UlzqLariGg7RdABllxzsbX8GUqQNR5BdA6QJkNfQgG6ha+Qz1VJ71dQYlYd5SHnrGf/nlxg/F8cPwn+BcDpV8YfE35PxibsIF8lg+sH6uxYW918q/h+l5d0oJ86PgssMLeeif/G91o8xmRu6aru3jQ/cvtzo+d8+Pt21O/UW9klqZ7KfmfY90X3XbBFFru0rhhddPuuP1PqZ2flxcWpegK0bUfDdueuqsQCT22/g3vvvu56n5jPt/1e+N93t4s8/fgLLQlej"
+#seed_string ="v1.eJztV02P2kgQ/SstH3YvOezXYZWbbQxmBzCymaAkiqzGLqBDu8vqbg+xRvnvW20DBma02lxymgsyr57749Wr6vazt+MVGO+9V1XeO2+HXLpn/hU1p//wzWoeC2VT2AlUxLO6gXfenqBpVaO2XBVwRq1QOwnZvtluJYGesVw7jAaqeB1iVXNjXg1v0JgHaE+xeUVRDRU+QUlBQ2tox1zoNtyDsa8OMHASuwc9cK6GKXSzuZqhX3OBxxeY2WN9vZRtI6UboIdCzS2Ya3YHB1xrkC/xOehiz5W9ihQSuM4sDTNq1A5I126aDdp9J5UTP9wLWRJYNMaiS81WA2QF11BoPA5jVdVSg19Y8UTDlclRUo6ePdvWbvMKFdCrT1w2LsefaWYsDhaPyvvyndZhqiI70OZsI/llcQSGeDz/PQDUUwuVScGAPaNbbuycm8PFEFtB24QRCNv6qj1SCmAISbnmUoK9sGuNOw3GiCeYoEY1ozXwTetS2lmoc4S1pDUqC2pI+SU/2saIB3qwV7I6ye5mKlCStfj9AjZYbYp9E/DdVb5qkHIsNNxBa6HKO2hGlhqgDaI1U9rGHRQTSw+YbZQouu3eYZ8o3VcTFFze2MtqUDu7HxAJSjhRanFwWd1yaQgFHdBOB7eCPpvrGpto0hVvoLnz28Dt56ASqkUJOsbGwBW6FM79Y9Lf5W/AA1DA7X5N4gzg9MAVD8kqQ+poXDIwUEa1UENCT4XcGc35dz7P5372kAePi8VH7/3v7xySxdNoNsrjKE3OUBL66XThXxjrJB1d/iSLCf04wuQGW03n0RlY+7NZtKJ/VA5fG3WYYcFt3+k+U5yFrmDYCo+gWYq4ZV29sAdRsoSKUSjXJf+bl6HaMUJWooKePIJDw5aStzuNjSpZCkeuS+bTCyPemp400SQoC3h7euqaWx+Kqaxb9guRtSTVXn+/E//lu3NExcZdtbKuXJmr43OsUZYLxT5QyfIdsDHVKQv3KDSLlz0nKYAr1puDde5gfW314UwhFT8vX06cWafQEi2bKsVCbGoJv5qr2bMjr+rbkV2wk043XWskFkmsmE8tFXR73vgffWhNztRUDZKlnEYxLAD+5PLBaa9nDmLZUa7X94UKUYvicEp6Hn3wF/nYT5M06t7KZ9Ei658WSZ5Ffpyk2SmULKLeqtnKPa6SdZT2kaU/88MoDyIaLHuY9vqRAx9X5GCC1v58mWdh+hjk8TKfJGmy6Cmrx8U0PM33KUn9PCaTDkxawih6eHSrpmZUCC6pS5Zd2QTpdDSJ3FPhUum9/83VFrllaBMVlLT93uEniI5ISvrw3zjrmgm68+cG6jJ0h3V+uGBb0lOAWY/vkSy+RybBC87qBmldqod1u9OGbiF0UulbcKW5MlvU1S2coL0AlF0iuIvKCSiQNpxCeQuQJ0DdQgGdnLfIR2px7njsMOoa84TyNij+1w8pfmp/b4L/gOBUVdmbxX+m4hN/kSzy4OFN9Z/aWPx/qPm/tZafJjlpXkuuSnSay+Ei+Nxdp5SwdNRebnMxcHf3oos0ndJpFCYfovQj3U39dOW5kdwXsrtPXL7FtohSGHeL4dUln933dXf7vPC4PPZ3uDONJPjmvUo1WIEV7vN9YP/5KvPYf1qeSX//7+HuJ//y/V9Ve5j0"
 # Remove the 'v1.' prefix
 if seed_string.startswith('v1.'):
    seed_string = seed_string[3:]

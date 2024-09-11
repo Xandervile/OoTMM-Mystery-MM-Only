@@ -78,8 +78,8 @@ while MysteryCount < MinMysterySettings:
     MysteryCount = 0
     HardCounter = 99
 
-    JunkList = DefaultJunkList[:]
-    HintList = DefaultHintList[:]
+    JunkList = DefaultJunkList.copy()
+    HintList = DefaultHintList.copy()
     HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
     MoonConditions = DefaultMoonConditions.copy()
     StartingItems = DefaultStartingItems.copy()
@@ -185,15 +185,16 @@ while MysteryCount < MinMysterySettings:
                 EnemySoulShuffle = True
             else:
                 FriendSoulShuffle = True
-                EnemySoulShuffle = True
+                EnemySoulShuffle = True     
 
         LongQuest = random.choices(
             ["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"],
             [35, 20, 15, 30])[0]
         if LongQuest != "none" and LongQuest in JunkList:
             JunkList.remove(LongQuest)
-            JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
-            JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
+            if LongQuest == "MMLaboratory Zora Song":
+                JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
+                JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
 
         OverworldER = ["none", False]
         InteriorER = ["none", False]

@@ -10,87 +10,94 @@ HardModeBalance = False
 # HarderSettings get rolled first to allow limitations
 HARDMODELIMIT = 2
 
-HintToInsertBefore = {"type": "woth",
+DefaultJunkList = [
+    "MM Deku Playground Reward All Days",
+    "MM Great Bay Great Fairy",
+    "MM Honey & Darling Reward All Days",
+    "MM Ikana Great Fairy",
+    "MM Laboratory Zora Song",
+    "MM Moon Fierce Deity Mask",
+    "MM Mountain Village Frog Choir HP",
+    "MM Ocean Spider House Wallet",
+    "MM Southern Swamp Song of Soaring",
+    "MM Snowhead Great Fairy",
+    "MM Stock Pot Inn Couple\'s Mask",
+    "MM Swamp Spider House Mask of Truth",
+    "MM Town Archery Reward 2",
+    "MM Waterfall Rapids Beaver Race 2",
+    "MM Woodfall Great Fairy"]
+
+DefaultHintList = [{"type": "foolish",
                     "amount": 4,
-                    "extra": 1}
+                    "extra": 1},
+                   {"type": "always",
+                    "amount": "max",
+                    "extra": 1},
+                   {"type": "sometimes",
+                    "amount": 3,
+                    "extra": 1},
+                   {"type": "woth",
+                    "amount": 4,
+                    "extra": 1},
+                   {"type": "sometimes",
+                    "amount": "max",
+                    "extra": 1}]
+
+HintToInsertBefore = {"type": "woth",
+                      "amount": 4,
+                      "extra": 1}
+
+DefaultMoonConditions = {"count": 4,
+                         "stones": False,
+                         "medallions": False,
+                         "remains": True,
+                         "skullsGold": False,
+                         "skullsSwamp": False,
+                         "skullsOcean": False,
+                         "fairiesWF": False,
+                         "fairiesSH": False,
+                         "fairiesGB": False,
+                         "fairiesST": False,
+                         "fairyTown": False,
+                         "masksRegular": False,
+                         "masksTransform": False,
+                         "masksOot": False,
+                         "triforce": False,
+                         "coinsRed": False,
+                         "coinsGreen": False,
+                         "coinsBlue": False,
+                         "coinsYellow": False}
+
+DefaultStartingItems = {
+    "MM_OCARINA": 1,
+    "MM_SONG_SOARING": 1,
+    "MM_SONG_TIME": 1
+}
 
 while MysteryCount < MinMysterySettings:
     MysteryCount = 0
     HardCounter = 99
 
-    JunkList = [
-        "MM Deku Playground Reward All Days",
-        "MM Great Bay Great Fairy",
-        "MM Honey & Darling Reward All Days",
-        "MM Ikana Great Fairy",
-        "MM Laboratory Zora Song",
-        "MM Moon Fierce Deity Mask",
-        "MM Mountain Village Frog Choir HP",
-        "MM Ocean Spider House Wallet",
-        "MM Southern Swamp Song of Soaring",
-        "MM Snowhead Great Fairy",
-        "MM Stock Pot Inn Couple\'s Mask",
-        "MM Swamp Spider House Mask of Truth",
-        "MM Town Archery Reward 2",
-        "MM Waterfall Rapids Beaver Race 2",
-        "MM Woodfall Great Fairy"]
-
-    HintList = [{"type": "foolish",
-                 "amount": 4,
-                 "extra": 1},
-                {"type": "always",
-                 "amount": "max",
-                 "extra": 1},
-                {"type": "sometimes",
-                 "amount": 3,
-                 "extra": 1},
-                {"type": "woth",
-                 "amount": 4,
-                 "extra": 1},
-                {"type": "sometimes",
-                 "amount": "max",
-                 "extra": 1}]
-
+    JunkList = DefaultJunkList[:]
+    HintList = DefaultHintList[:]
     HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
-
-    MoonConditions = {"count": 4,
-                      "stones": False,
-                      "medallions": False,
-                      "remains": True,
-                      "skullsGold": False,
-                      "skullsSwamp": False,
-                      "skullsOcean": False,
-                      "fairiesWF": False,
-                      "fairiesSH": False,
-                      "fairiesGB": False,
-                      "fairiesST": False,
-                      "fairyTown": False,
-                      "masksRegular": False,
-                      "masksTransform": False,
-                      "masksOot": False,
-                      "triforce": False,
-                      "coinsRed": False,
-                      "coinsGreen": False,
-                      "coinsBlue": False,
-                      "coinsYellow": False}
-
-    StartingItems = {
-        "MM_OCARINA": 1,
-        "MM_SONG_SOARING": 1,
-        "MM_SONG_TIME": 1
-    }
+    MoonConditions = DefaultMoonConditions.copy()
+    StartingItems = DefaultStartingItems.copy()
 
     preCompletedDungeons = False
     preCompletedDungeonsRemains = 0
 
     RandomStartingItem = random.choices(
-        ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_DEITY", "MM_BOW", "MM_HOOKSHOT", "MM_BOMB_BAG",
+        ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_DEITY", "MM_BOW", "MM_HOOKSHOT",
+         "MM_BOMB_BAG",
          "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_MAGIC_UPGRADE"],
         [5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5])[0]
     if RandomStartingItem != "none":
         StartingItems[RandomStartingItem] = 1
+
     RandomStartingSong = random.choices(
-        ["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON", "MM_SONG_ZORA",
+        ["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
+         "MM_SONG_ZORA",
          "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0]
     if RandomStartingSong == "none":
         JunkList.remove("MM Southern Swamp Song of Soaring")
@@ -98,8 +105,19 @@ while MysteryCount < MinMysterySettings:
         MoonConditions["count"] = 0
         MoonConditions["remains"] = False
 
+    # Sets PreHard loop lists in case of rejections
+    PreHardHintList = HintList[:]
+    PreHardStartingItems = StartingItems.copy()
+    PreHardMoonConditions = MoonConditions.copy()
+    PreHardJunkList = JunkList[:]
+
     while HardCounter > HARDMODELIMIT:
         HardCounter = 0
+
+        HintList = PreHardHintList[:]
+        StartingItems = PreHardStartingItems.copy()
+        MoonConditions = PreHardMoonConditions.copy()
+        JunkList = PreHardJunkList[:]
 
         GrassShuffleWeight = [10, 90]
         GrassShuffle = random.choices([True, False], GrassShuffleWeight)[0]
@@ -123,7 +141,8 @@ while MysteryCount < MinMysterySettings:
             MysteryCount += 1
             ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], [20, 30, 50])[0]
             if ClockProgressiveSetting == "separate":
-                StartingClock = random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"],
+                StartingClock = \
+                random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"],
                                [10, 10, 10, 10, 10, 10])[0]
                 StartingItems[StartingClock] = 1
                 if StartingClock != "MM_CLOCK6":
@@ -181,7 +200,7 @@ while MysteryCount < MinMysterySettings:
         RegionsER = "none"
         # Overworld and Interior ER last because screw it
         EntranceRandomizer = \
-        random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [70, 15, 6, 6, 3])[0]
+            random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [70, 15, 6, 6, 3])[0]
         if EntranceRandomizer == "Regions Only":  # Not Hard due to only 5 entrances shuffling
             MysteryCount += 1
             RegionsER = "full"
@@ -394,7 +413,7 @@ settings_data = {
                    "coinsGreen": False,
                    "coinsBlue": False,
                    "coinsYellow": False}},
-    "plando": {"locations": {"MM Initial Song of Healing":RandomStartingSong}},
+    "plando": {"locations": {"MM Initial Song of Healing": RandomStartingSong}},
     "hints": HintList,
 }
 
@@ -419,23 +438,23 @@ print(seed_string)
 
 # seed_string = "v1.eJztV0uP4jgQ/itWDruXPuzr1LcAgbANBCX0oJ1RKzJJARkcV2Q7zUSj+e9bzhNodqW59Kkv4HxVLpe/etj+7hx4Dtp5dPLceXAOyIUd86+oOH3DN6O4n0kTwiFDSXpGlfDgHAma5wUqw2UCHWoyeRAQHcv9XhDoaMOVxchQzosx5gXX+q5Y51yIJ6ha4TInsYIcXyEl6Q61/k+hwbOc8kxVg2Euq/MRFFjD5H9Vi8dH0Ob+4r1OYGjaXTsJni+Wb7arGyCSeN6R+3qQJAK4igw3MCnlAYi42ukdmmPNhWV3fMxESmBSaoOW+70CiBKuIFF4Hmzl+VqBm5jslcylwVlQEL47piqshxKl9e6Vi9IG8QutjMnJUuK8/CA/dJ5Ep1IIUwreO0fgGM/d5wmgmBvIdQgaTIfuuTZLrk99xPcZqAQmkJnK7WjpRUJsiQAwvXah8KBA6+wVZqhQLsgHvqss73WO1EE1RsAYpQE5xKVjljLLRzzRwFzQaim7WSlBQdnBbx3YYb5LjuWIHy7iVYAQ00zBDbTNZHoDLSi5BmiHaPSctnED+aSlBsyUMkvq7d5gnyncFwskXMBFslD6gTyY4wWCpdAj2tYNtCqSAREgM8tckZ1s6PdcaEJB2XnE854YtwWsZoqIxguoy/w66DaXlst46UZP8SwIg5Xz+PuDRSJ/7i0mse+FQQcFYzecr9xeYxuEk/4jWM3oxyrMrrDNfOkRQMn4tZSnBSbcNI3kC6mwCZxKtha8OigsZcpCOHOVMlcINuGVdqwdVlPKQp5AK29hBdywEa/aUV3BjcinsqjYL2RDCdrpfbPzE5f87dwF31G4DKqK2bixCOsmQZIlkhvTug5YXQjMVkgnK6XhmWSfqBj4AdiUKoCNj5gp5q8bnSABLhkFLAUCsdTAmqxtxLaPHIGnb12KsLSNieaeeV7UHjHc0z9XWedcZKjw2RoNm0vJxlgWAn7VFx62cy9Xt0JraKPKujGR1oZaB3NVQstVHW1/NKIt9R9FaSYoFGRFsxFwyv8mMJ0OYlqrXO7hhcpAZcmpDXrsfXJX8dQNg9CrZ8ULbxU1o1UQR57rB2HUioKV1yRntLHDTbD1wkaydhfu2ItHHhmLnuYNx5RzzxvKWYK27nIdR+PweRT76za3a5XN82o+btf7HIRu7LuLxaBJLky8p2frNbWCJOOCelRaF8oonE9mnh0lNtzO42+2mijXhvrLIaXtNxneQnRUUWIM39o2ZD1D2/2voDpCN1idMz22Jz4z0NvpLRL5t8hs9EZnc4VUNtSD37bX0yFP54S6BjeKS71HlV/DAZoeoOiSgr0HtECCtOEQ0muAcgLkNTSic+sa+Ye6rz2caoy6xjKwPaln/K+fYrztnR+E/wThVFXRR4q/J+MzdxWs4tHTB+vv2ljcv6n5f7SWd6OcOC8ElylazsVwEfxeX8ZkZuio7e82PnB7c6Nba3+53AThMnKsGfv6tJeJ/hm0RxSZtlcYnvfBrN+u9dWz1+Pi3Fz/OjXa/zfnrqrGHExmn8aD9p93Nc/Nq+7/V75n7nbxlx//AsJDX6g="
 # Remove the 'v1.' prefix
-#if seed_string.startswith('v1.'):
-#    seed_string = seed_string[3:]
+if seed_string.startswith('v1.'):
+   seed_string = seed_string[3:]
 
 # Add padding back if needed
-#seed_string += '=' * (-len(seed_string) % 4)
+seed_string += '=' * (-len(seed_string) % 4)
 
 # Base64 decode
-#decoded_bytes = base64.urlsafe_b64decode(seed_string)
+decoded_bytes = base64.urlsafe_b64decode(seed_string)
 
 # Decompress using zlib
-#decompressed_bytes = zlib.decompress(decoded_bytes)
+decompressed_bytes = zlib.decompress(decoded_bytes)
 
 # Convert bytes to JSON string
-#settings_json = decompressed_bytes.decode('utf-8')
+settings_json = decompressed_bytes.decode('utf-8')
 
 # Parse the JSON string into Python dictionary
-#settings_data = json.loads(settings_json)
+settings_data = json.loads(settings_json)
 
 # Print the result
-#print(settings_data)
+print(settings_data)

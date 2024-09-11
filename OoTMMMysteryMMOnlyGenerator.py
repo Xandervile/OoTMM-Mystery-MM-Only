@@ -37,7 +37,7 @@ DefaultHintList = [{"type": "foolish",
                     "amount": 3,
                     "extra": 1},
                    {"type": "woth",
-                    "amount": 4,
+                    "amount": 8,
                     "extra": 1},
                    {"type": "sometimes",
                     "amount": "max",
@@ -98,7 +98,7 @@ while MysteryCount < MinMysterySettings:
     RandomStartingSong = random.choices(
         ["none", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
          "MM_SONG_ZORA",
-         "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0]
+         "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0] #[0, 40, 10, 10, 10, 10, 10, 10, 0]
     if RandomStartingSong == "none":
         JunkList.remove("MM Southern Swamp Song of Soaring")
     if RandomStartingSong == "MM_SONG_ORDER":
@@ -106,18 +106,18 @@ while MysteryCount < MinMysterySettings:
         MoonConditions["remains"] = False
 
     # Sets PreHard loop lists in case of rejections
-    PreHardHintList = HintList[:]
+    PreHardHintList = HintList.copy()
     PreHardStartingItems = StartingItems.copy()
     PreHardMoonConditions = MoonConditions.copy()
-    PreHardJunkList = JunkList[:]
+    PreHardJunkList = JunkList.copy()
 
     while HardCounter > HARDMODELIMIT:
         HardCounter = 0
 
-        HintList = PreHardHintList[:]
+        HintList = PreHardHintList.copy()
         StartingItems = PreHardStartingItems.copy()
         MoonConditions = PreHardMoonConditions.copy()
-        JunkList = PreHardJunkList[:]
+        JunkList = PreHardJunkList.copy()
 
         GrassShuffleWeight = [10, 90]
         GrassShuffle = random.choices([True, False], GrassShuffleWeight)[0]
@@ -189,10 +189,10 @@ while MysteryCount < MinMysterySettings:
 
         LongQuest = random.choices(
             ["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"],
-            [35, 20, 15, 30])[0]
+            [35, 20, 15, 30])[0] #[35, 20, 15, 30]
         if LongQuest != "none" and LongQuest in JunkList:
             JunkList.remove(LongQuest)
-            if LongQuest == "MMLaboratory Zora Song":
+            if LongQuest == "MM Laboratory Zora Song":
                 JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
                 JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
 
@@ -223,7 +223,7 @@ while MysteryCount < MinMysterySettings:
         # Also to add: Mixed?
 
     # Other Settings get Randomized here
-    SongShuffle = random.choices(["songLocations", "anywhere"], [65, 35])[0]
+    SongShuffle = random.choices(["songLocations", "anywhere"], [65, 35])[0] #[65, 35]
     if SongShuffle == "anywhere":
         MysteryCount += 1
         if "MM Southern Swamp Song of Soaring" in JunkList:

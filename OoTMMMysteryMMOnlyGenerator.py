@@ -88,10 +88,10 @@ while MysteryCount < MinMysterySettings:
     preCompletedDungeonsRemains = 0
 
     RandomStartingItem = random.choices(
-        ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_DEITY", "MM_BOW", "MM_HOOKSHOT",
+        ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_FIERCE_DEITY", "MM_BOW", "MM_HOOKSHOT",
          "MM_BOMB_BAG",
          "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_MAGIC_UPGRADE"],
-        [5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5])[0]
+        [5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5])[0]      #[5, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 5]
     if RandomStartingItem != "none":
         StartingItems[RandomStartingItem] = 1
 
@@ -436,7 +436,7 @@ seed_string = f"v1.{encoded_data}"
 print("Encoded Seed String:")
 print(seed_string)
 
-# seed_string = "v1.eJztV0uP4jgQ/itWDruXPuzr1LcAgbANBCX0oJ1RKzJJARkcV2Q7zUSj+e9bzhNodqW59Kkv4HxVLpe/etj+7hx4Dtp5dPLceXAOyIUd86+oOH3DN6O4n0kTwiFDSXpGlfDgHAma5wUqw2UCHWoyeRAQHcv9XhDoaMOVxchQzosx5gXX+q5Y51yIJ6ha4TInsYIcXyEl6Q61/k+hwbOc8kxVg2Euq/MRFFjD5H9Vi8dH0Ob+4r1OYGjaXTsJni+Wb7arGyCSeN6R+3qQJAK4igw3MCnlAYi42ukdmmPNhWV3fMxESmBSaoOW+70CiBKuIFF4Hmzl+VqBm5jslcylwVlQEL47piqshxKl9e6Vi9IG8QutjMnJUuK8/CA/dJ5Ep1IIUwreO0fgGM/d5wmgmBvIdQgaTIfuuTZLrk99xPcZqAQmkJnK7WjpRUJsiQAwvXah8KBA6+wVZqhQLsgHvqss73WO1EE1RsAYpQE5xKVjljLLRzzRwFzQaim7WSlBQdnBbx3YYb5LjuWIHy7iVYAQ00zBDbTNZHoDLSi5BmiHaPSctnED+aSlBsyUMkvq7d5gnyncFwskXMBFslD6gTyY4wWCpdAj2tYNtCqSAREgM8tckZ1s6PdcaEJB2XnE854YtwWsZoqIxguoy/w66DaXlst46UZP8SwIg5Xz+PuDRSJ/7i0mse+FQQcFYzecr9xeYxuEk/4jWM3oxyrMrrDNfOkRQMn4tZSnBSbcNI3kC6mwCZxKtha8OigsZcpCOHOVMlcINuGVdqwdVlPKQp5AK29hBdywEa/aUV3BjcinsqjYL2RDCdrpfbPzE5f87dwF31G4DKqK2bixCOsmQZIlkhvTug5YXQjMVkgnK6XhmWSfqBj4AdiUKoCNj5gp5q8bnSABLhkFLAUCsdTAmqxtxLaPHIGnb12KsLSNieaeeV7UHjHc0z9XWedcZKjw2RoNm0vJxlgWAn7VFx62cy9Xt0JraKPKujGR1oZaB3NVQstVHW1/NKIt9R9FaSYoFGRFsxFwyv8mMJ0OYlqrXO7hhcpAZcmpDXrsfXJX8dQNg9CrZ8ULbxU1o1UQR57rB2HUioKV1yRntLHDTbD1wkaydhfu2ItHHhmLnuYNx5RzzxvKWYK27nIdR+PweRT76za3a5XN82o+btf7HIRu7LuLxaBJLky8p2frNbWCJOOCelRaF8oonE9mnh0lNtzO42+2mijXhvrLIaXtNxneQnRUUWIM39o2ZD1D2/2voDpCN1idMz22Jz4z0NvpLRL5t8hs9EZnc4VUNtSD37bX0yFP54S6BjeKS71HlV/DAZoeoOiSgr0HtECCtOEQ0muAcgLkNTSic+sa+Ye6rz2caoy6xjKwPaln/K+fYrztnR+E/wThVFXRR4q/J+MzdxWs4tHTB+vv2ljcv6n5f7SWd6OcOC8ElylazsVwEfxeX8ZkZuio7e82PnB7c6Nba3+53AThMnKsGfv6tJeJ/hm0RxSZtlcYnvfBrN+u9dWz1+Pi3Fz/OjXa/zfnrqrGHExmn8aD9p93Nc/Nq+7/V75n7nbxlx//AsJDX6g="
+#seed_string = "v1.eJztV02P4jgQ/StWDruXPuzXqW8BAsnyEZTQg2ZGrcgkBWRwXMh2mola89+nnJAEaHalufSpL2C/KtvlV89l59XZ8QK08+gUhfPg7JAL2+bfUHHqw3ejuJ9LE8EuR0l+RpXw4OwJCoojKsNlCi1qcrkTEO/L7VYQ6GjDlcVoooIfh1gcudZ3zbrgQkyhOhvnBZkVFPgCGVk3qPV/GjVFWI15rqrhHrS5P33nE5o9qN7nYpoGGypuQNslmi2d4QFXCsRbfI0yAxUYKN7aYomnDW3rwpIK4Co2tMSolDsgQuvNbNDsa44s68N9LjIC01IbtDnZKoA45QpShad+rqJYKnBTk7/QdFl4EpScV8dUR7sviRJo6AsXpU3uV1oZ04PBk3Sef1AcukjjQymEKQXvgiNwiKe2ewA41huLQINp0S3XZs71oVPCNgeVwghyU7myOhG70JuEWBMBYDrvo8KdAq3zF5igQjmjGPimstmqtVMn2xjKA0oDss9myywpzkc8UMNc0Gopu1kpRUGq4bcBbLDYpPtywHcX+TqCEONcwQ20zmV2A81ILT20QTQ6oG3cQD55qR4zpczTers32BdK98UCKRdX0jMK5M7sLxAshfYkFFWPCZC5JeqYH2ymt1zoemyj/TqBVhfzeRIO3ShYuM7jnw+2G4eLCf1YbHKFrYK51wJzN54mIy9Yfe5c1mE06jp+4M1Gie9F4dWIceBFQ68bSIr7VsrDDFNumirylVzZCA4lWwpe7RSWMmMRnLjKmCsEG/FKO3Y+NlHADRvw6tyqT3Fj8knkFfuNnJWgvd4fHxy45G/HzviGyDeoKmazwGKsCwVZ5oiSjWtVs1rWzOq9tZXS8FyyTyRtvgM2Jj2z4R5zxfxl4xOmwCWjfFBhoBBLDazRYGO2VWEPPHsbUoylLU409sSLYx0Rwy39c5W3wcWGjjFbomGBlGyI5VHA7/oiwvPYy9Wt0U60UmVdZshrRYWAuSql5aqWtr8a05qqiSIVCRZxmkWzAXBSM/WIj9YHMatdLvfwTKJWeXo4ZzfxPrmLZOxGYeTVo5KZt4ib1iJMYs/1wyg+m8KF1wgnXtnmKlx7UWNZujOXlDTwaLJ4GjQck06fViQ6gtbufJnEw+hpkPjLZBJG4aJxWT0tguF5vS9h5Ca+O5v1nhTCyJs+2ajpYKc5F1RxsvqoDKJgNPFsK7Xpdh7/sOeJtNYfrwIy2n4j5TNENwkJ4+IE2vKqJ2hr+RVUZ+gGqzXTYVviMwe9Ht8isX+LTAZvfFZXSGVT3cdtKzdd5VT11TW4UlzqLariGg7RdABllxzsbX8GUqQNR5BdA6QJkNfQgG6ha+Qz1VJ71dQYlYd5SHnrGf/nlxg/F8cPwn+BcDpV8YfE35PxibsIF8lg+sH6uxYW918q/h+l5d0oJ86PgssMLeeif/G91o8xmRu6aru3jQ/cvtzo+d8+Pt21O/UW9klqZ7KfmfY90X3XbBFFru0rhhddPuuP1PqZ2flxcWpegK0bUfDdueuqsQCT22/g3vvvu56n5jPt/1e+N93t4s8/fgLLQlej"
 # Remove the 'v1.' prefix
 if seed_string.startswith('v1.'):
    seed_string = seed_string[3:]

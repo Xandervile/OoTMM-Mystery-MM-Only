@@ -1,3 +1,4 @@
 Work in Progress
 
-Making a list of all weights.
+Weight list:
+https://docs.google.com/spreadsheets/d/1gpKNgw0azmCE7S6MR-qsvLt6VYnvvSurN_3NNMdY398/edit?usp=sharing

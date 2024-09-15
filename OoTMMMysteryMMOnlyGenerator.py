@@ -3,9 +3,10 @@ import base64
 import json
 import random
 
+
 MinMysterySettings = 7
 MysteryCount = 0
-HardModeBalance = False
+HardCounter = 99
 
 # HarderSettings get rolled first to allow limitations
 HARDMODELIMIT = 2
@@ -30,14 +31,11 @@ DefaultJunkList = [
 DefaultHintList = [{"type": "foolish",
                     "amount": 4,
                     "extra": 1},
+                   {"type": "woth",
+                    "amount": 4,
+                    "extra": 1},
                    {"type": "always",
                     "amount": "max",
-                    "extra": 1},
-                   {"type": "sometimes",
-                    "amount": 3,
-                    "extra": 1},
-                   {"type": "woth",
-                    "amount": 8,
                     "extra": 1},
                    {"type": "sometimes",
                     "amount": "max",
@@ -74,19 +72,54 @@ DefaultStartingItems = {
     "MM_SONG_TIME": 1
 }
 
-while MysteryCount < MinMysterySettings:
+DefaultPlando = {"locations": {}}
+
+def add_location(location_header, location_name, location_value):
+    location_header["locations"][location_name] = location_value
+
+while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     MysteryCount = 0
-    HardCounter = 99
+    HardCounter = 0
+    HardModeBalance = False
+    RemainHunt = False
+    FairyHunt = False
 
     JunkList = DefaultJunkList.copy()
     HintList = DefaultHintList.copy()
     HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
     MoonConditions = DefaultMoonConditions.copy()
     StartingItems = DefaultStartingItems.copy()
+    Plando = DefaultPlando.copy()
+
+    HintRegions = False
+
+    ChestFairy = "starting"
+    StrayFairyRewardCount = 15
 
     preCompletedDungeons = False
     preCompletedDungeonsRemains = 0
 
+    ModeSettings = random.choices(["Default", "Remains Hunt", "Fairy Hunt"], [0, 15, 0])[0]
+    if ModeSettings == "Remains Hunt":
+        RemainsHunt = True
+        RemainsLocation = "anywhere"
+    elif ModeSettings == "Fairy Hunt":
+        FairyHunt = True
+        RemainsLocation = "anywhere"
+        add_location(Plando, "MM Woodfall Great Fairy", "MM_REMAINS_ODOLWA")
+        JunkList.remove("MM Woodfall Great Fairy")
+        add_location(Plando, "MM Snowhead Great Fairy", "MM_REMAINS_GOHT")
+        JunkList.remove("MM Snowhead Great Fairy")
+        add_location(Plando, "MM Great Bay Great Fairy", "MM_REMAINS_GYORG")
+        JunkList.remove("MM Great Bay Great Fairy")
+        add_location(Plando, "MM Ikana Great Fairy", "MM_REMAINS_TWINMOLD")
+        JunkList.remove("MM Ikana Great Fairy")
+        StartingItems["MM_MASK_GREAT_FAIRY"] = 1
+        ChestFairy = "anywhere"
+        HardModeBalance = True
+    else:
+        RemainsLocation = "dungeonbluewarps"
+                
     RandomStartingItem = random.choices(
         ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_FIERCE_DEITY", "MM_BOW", "MM_HOOKSHOT",
          "MM_BOMB_BAG",
@@ -99,125 +132,114 @@ while MysteryCount < MinMysterySettings:
         ["MM_RECOVERY_HEART", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
          "MM_SONG_ZORA",
          "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0] #[0, 40, 10, 10, 10, 10, 10, 10, 0]
+    add_location(Plando, "MM Initial Song of Healing", RandomStartingSong)
     if RandomStartingSong == "MM_RECOVERY_HEART":
         JunkList.remove("MM Southern Swamp Song of Soaring")
     if RandomStartingSong == "MM_SONG_ORDER":
         MoonConditions["count"] = 0
         MoonConditions["remains"] = False
 
-    # Sets PreHard loop lists in case of rejections
-    PreHardHintList = HintList.copy()
-    PreHardStartingItems = StartingItems.copy()
-    PreHardMoonConditions = MoonConditions.copy()
-    PreHardJunkList = JunkList.copy()
+    GrassShuffleWeight = [10, 90]
+    GrassShuffle = random.choices([True, False], GrassShuffleWeight)[0]
+    if GrassShuffle == True:
+        HardCounter += 1
+        MysteryCount += 1
 
-    while HardCounter > HARDMODELIMIT:
-        HardCounter = 0
-
-        HintList = PreHardHintList.copy()
-        StartingItems = PreHardStartingItems.copy()
-        MoonConditions = PreHardMoonConditions.copy()
-        JunkList = PreHardJunkList.copy()
-
-        GrassShuffleWeight = [10, 90]
-        GrassShuffle = random.choices([True, False], GrassShuffleWeight)[0]
-        if GrassShuffle == True:
+    SKeyShuffleWeight = [60, 30, 10]
+    SKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], SKeyShuffleWeight)[0]
+    BKeyShuffleWeight = [60, 30, 10]
+    BKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], BKeyShuffleWeight)[0]
+    if SKeyShuffle != "removed" or BKeyShuffle != "removed":
+        MysteryCount += 1
+        if (SKeyShuffle == "anywhere" and BKeyShuffle == "anywhere"):
             HardCounter += 1
-            MysteryCount += 1
 
-        SKeyShuffleWeight = [60, 30, 10]
-        SKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], SKeyShuffleWeight)[0]
-        BKeyShuffleWeight = [60, 30, 10]
-        BKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], BKeyShuffleWeight)[0]
-        if SKeyShuffle != "removed" or BKeyShuffle != "removed":
-            MysteryCount += 1
-            if (SKeyShuffle == "anywhere" and BKeyShuffle == "anywhere"):
-                HardCounter += 1
+    ClockProgressiveSetting = "separate"
+    ClockShuffle = random.choices([True, False], [10, 90])[0]
+    if ClockShuffle == True:
+        HardCounter += 1
+        MysteryCount += 1
+        ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], [20, 30, 50])[0]
+        if ClockProgressiveSetting == "separate":
+            StartingClock = \
+            random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"],
+                           [10, 10, 10, 10, 10, 10])[0]
+            StartingItems[StartingClock] = 1
+            if StartingClock != "MM_CLOCK6":
+                HintList.insert(HintIndex, {"type": "item",
+                                            "amount": 1,
+                                            "extra": 1,
+                                            "item": "MM_CLOCK6"})
 
-        ClockProgressiveSetting = "separate"
-        ClockShuffle = random.choices([True, False], [10, 90])[0]
-        if ClockShuffle == True:
+    BossSoulsWeight = [10, 90]
+    if BKeyShuffle == "anywhere":  # Having both Boss Souls and BK anywhere sounds like hell
+        BossSoulsWeight[1] += BossSoulsWeight[0]
+        BossSoulsWeight[0] = 0
+    SharedBossSoulShuffle = random.choices([True, False], BossSoulsWeight)[0]
+    if SharedBossSoulShuffle == True:
+        HardCounter += 1
+        MysteryCount += 1
+
+    FreestandingShuffle = random.choices([True, False], [20, 80])[0]
+    WonderSpotShuffle = random.choices([True, False], [20, 80])[0]
+    if FreestandingShuffle != False or WonderSpotShuffle != False:
+        MysteryCount += 1
+        HintRegions = True
+        if FreestandingShuffle != False and WonderSpotShuffle != False:
             HardCounter += 1
-            MysteryCount += 1
-            ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], [20, 30, 50])[0]
-            if ClockProgressiveSetting == "separate":
-                StartingClock = \
-                random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"],
-                               [10, 10, 10, 10, 10, 10])[0]
-                StartingItems[StartingClock] = 1
-                if StartingClock != "MM_CLOCK6":
-                    HintList.insert(HintIndex, {"type": "item",
-                                                "amount": 1,
-                                                "extra": 1,
-                                                "item": "MM_CLOCK6"})
 
-        BossSoulsWeight = [10, 90]
-        if BKeyShuffle == "anywhere":  # Having both Boss Souls and BK anywhere sounds like hell
-            BossSoulsWeight[1] += BossSoulsWeight[0]
-            BossSoulsWeight[0] = 0
-        SharedBossSoulShuffle = random.choices([True, False], BossSoulsWeight)[0]
-        if SharedBossSoulShuffle == True:
-            HardCounter += 1
-            MysteryCount += 1
+    PotShuffle = random.choices([True, False], [15, 85])[0]
+    if PotShuffle == True:
+        HintRegions = True
+        MysteryCount += 1
+        HardCounter += 1
+        JunkList.append("MM Goron Race Reward")
 
-        FreestandingShuffle = random.choices([True, False], [20, 80])[0]
-        WonderSpotShuffle = random.choices([True, False], [20, 80])[0]
-        if FreestandingShuffle != False or WonderSpotShuffle != False:
-            MysteryCount += 1
-            if FreestandingShuffle != False and WonderSpotShuffle != False:
-                HardCounter += 1
+    FriendSoulShuffle = False
+    EnemySoulShuffle = False
+    SoulShuffle = random.choices(["none", "friends", "enemies", "both"], [85, 5, 10, 0])[0]
+    if SoulShuffle != "none":
+        MysteryCount += 1
+        HardCounter += 1
+        if SoulShuffle == "friends":
+            FriendSoulShuffle = True
+        elif SoulShuffle == "enemies":
+            EnemySoulShuffle = True
+        else:
+            FriendSoulShuffle = True
+            EnemySoulShuffle = True     
 
-        PotShuffle = random.choices([True, False], [15, 85])[0]
-        if PotShuffle == True:
-            MysteryCount += 1
-            HardCounter += 1
-            JunkList.append("MM Goron Race Reward")
+    LongQuest = random.choices(
+        ["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"],
+        [35, 20, 15, 30])[0] #[35, 20, 15, 30]
+    if LongQuest != "none" and LongQuest in JunkList:
+        JunkList.remove(LongQuest)
+        if LongQuest == "MM Laboratory Zora Song":
+            JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
+            JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
 
-        FriendSoulShuffle = False
-        EnemySoulShuffle = False
-        SoulShuffle = random.choices(["none", "friends", "enemies", "both"], [85, 5, 10, 0])[0]
-        if SoulShuffle != "none":
-            MysteryCount += 1
-            HardCounter += 1
-            if SoulShuffle == "friends":
-                FriendSoulShuffle = True
-            elif SoulShuffle == "enemies":
-                EnemySoulShuffle = True
-            else:
-                FriendSoulShuffle = True
-                EnemySoulShuffle = True     
-
-        LongQuest = random.choices(
-            ["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"],
-            [35, 20, 15, 30])[0] #[35, 20, 15, 30]
-        if LongQuest != "none" and LongQuest in JunkList:
-            JunkList.remove(LongQuest)
-            if LongQuest == "MM Laboratory Zora Song":
-                JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
-                JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
-
-        OverworldER = ["none", False]
-        InteriorER = ["none", False]
-        RegionsER = "none"
-        # Overworld and Interior ER last because screw it
-        EntranceRandomizer = \
-            random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [70, 15, 6, 6, 3])[0]
-        if EntranceRandomizer == "Regions Only":  # Not Hard due to only 5 entrances shuffling
-            MysteryCount += 1
-            RegionsER = "full"
-        elif EntranceRandomizer == "Exterior Only":
-            MysteryCount += 1
-            HardCounter += 1
-            OverworldER = ["full", True]
-        elif EntranceRandomizer == "Interior Only":
-            MysteryCount += 1
-            HardCounter += 1
-            InteriorER = ["full", True]
-        elif EntranceRandomizer == "All":
-            MysteryCount += 1
-            HardCounter += 1
-            OverworldER = ["full", True]
-            InteriorER = ["full", True]
+    OverworldER = ["none", False]
+    InteriorER = ["none", False]
+    RegionsER = "none"
+    # Overworld and Interior ER last because screw it
+    EntranceRandomizer = \
+        random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [70, 15, 6, 6, 3])[0] #[70, 15, 6, 6, 3]
+    if EntranceRandomizer == "Regions Only":  # Not Hard due to only 5 entrances shuffling
+        MysteryCount += 1
+        RegionsER = "full"
+    elif EntranceRandomizer == "Exterior Only":
+        MysteryCount += 1
+        HardCounter += 1
+        OverworldER = ["full", True]
+    elif EntranceRandomizer == "Interior Only":
+        MysteryCount += 1
+        HardCounter += 1
+        InteriorER = ["full", True]
+    elif EntranceRandomizer == "All":
+        MysteryCount += 1
+        HardCounter += 1
+        OverworldER = ["full", True]
+        InteriorER = ["full", True]
 
         # To add: Decoupled? - This would by itself make the Hard Counter explode
         # Also to add: Mixed?
@@ -233,7 +255,10 @@ while MysteryCount < MinMysterySettings:
             JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
 
     TownFairy = "vanilla"
-    StrayFairyShuffle = random.choices(["removed", "anywhere"], [70, 30])[0]
+    FairyWeight = [70, 30]
+    if FairyHunt == True:
+        FairyWeight = [0, 100]
+    StrayFairyShuffle = random.choices(["removed", "anywhere"], FairyWeight)[0]
     if StrayFairyShuffle != "removed":
         MysteryCount += 1
         TownFairy = "anywhere"
@@ -275,11 +300,20 @@ while MysteryCount < MinMysterySettings:
 
     SkulltulaShuffle = random.choices(["none", "all"], [80, 20])[0]
     if SkulltulaShuffle == "all":
+        HintRegions = True
         MysteryCount += 1
 
-    GrottoShuffle = random.choices(["none", "full"], [20, 80])[0]
+    GrottoShuffle = random.choices(["none", "full"], [80, 20])[0]
     if GrottoShuffle == "full":
         MysteryCount += 1
+
+    OwlWeight = [10, 90]
+    if EntranceRandomizer == "full" or "Exterior Only":
+        OwlWeight = [0, 100]
+    OwlShuffle = random.choices(["anywhere", "none"], OwlWeight)[0]
+    if OwlShuffle == "anywhere":
+        MysteryCount += 1
+        StartingItems["MM_OWL_CLOCK_TOWN"] = 1
 
     WalletShuffleWeight = [30, 70]
     if RandomStartingItem == "MM_WALLET":
@@ -290,14 +324,17 @@ while MysteryCount < MinMysterySettings:
         MysteryCount += 1
 
     if HardCounter >= HARDMODELIMIT and HardModeBalance == True:
-        preCompletedDungeons = True
-        preCompletedDungeonsRemains = random.choices([1, 2], [80, 20])[0]
+        if FairyHunt == False:
+            preCompletedDungeons = True
+            preCompletedDungeonsRemains = random.choices([1, 2], [80, 20])[0]
+        else:  
+            StrayFairyRewardCount= 10
 
 # Rest of the settings are not stored already so are randomised here. To add:
 settings_data = {
     "games": "mm",
     "goal": "majora",
-    "extraHintRegions": True,
+    "extraHintRegions": HintRegions,
     "hintImportance": True,
     "songs": SongShuffle,
     "housesSkulltulaTokens": SkulltulaShuffle,
@@ -306,13 +343,13 @@ settings_data = {
     "smallKeyShuffleMm": SKeyShuffle,
     "bossKeyShuffleMm": BKeyShuffle,
     "townFairyShuffle": TownFairy,
-    "strayFairyChestShuffle": "starting",
+    "strayFairyChestShuffle": ChestFairy,
     "strayFairyOtherShuffle": StrayFairyShuffle,
-    "dungeonRewardShuffle": "dungeonbluewarps",
+    "dungeonRewardShuffle": RemainsLocation,
     "scrubShuffleMm": ScrubShuffle,
     "cowShuffleMm": SharedCowShuffle,
     "shopShuffleMm": SharedShopShuffle,
-    "owlShuffle": "none",
+    "owlShuffle": OwlShuffle,
     "shufflePotsMm": PotShuffle,
     "shuffleCratesMm": SharedCratesAndBarrels,
     "shuffleBarrelsMm": SharedCratesAndBarrels,
@@ -328,6 +365,7 @@ settings_data = {
     "beneathWell": "vanilla",
     "majoraChild": "custom",
     "freeScarecrowMm": True,
+    "strayFairyRewardCount": StrayFairyRewardCount,
     "preCompletedDungeons": preCompletedDungeons,
     "preCompletedDungeonsRemains": preCompletedDungeonsRemains,
     "mmPreActivatedOwls": {"type": "none",
@@ -418,7 +456,7 @@ settings_data = {
                    "coinsGreen": False,
                    "coinsBlue": False,
                    "coinsYellow": False}},
-    "plando": {"locations": {"MM Initial Song of Healing": RandomStartingSong}},
+    "plando": Plando,
     "hints": HintList,
 }
 
@@ -440,8 +478,10 @@ seed_string = f"v1.{encoded_data}"
 # Output the result
 print("Encoded Seed String:")
 print(seed_string)
+#print(HardCounter)
+#print(MysteryCount)
 
-#seed_string ="v1.eJztV02P2kgQ/SstH3YvOezXYZWbbQxmBzCymaAkiqzGLqBDu8vqbg+xRvnvW20DBma02lxymgsyr57749Wr6vazt+MVGO+9V1XeO2+HXLpn/hU1p//wzWoeC2VT2AlUxLO6gXfenqBpVaO2XBVwRq1QOwnZvtluJYGesVw7jAaqeB1iVXNjXg1v0JgHaE+xeUVRDRU+QUlBQ2tox1zoNtyDsa8OMHASuwc9cK6GKXSzuZqhX3OBxxeY2WN9vZRtI6UboIdCzS2Ya3YHB1xrkC/xOehiz5W9ihQSuM4sDTNq1A5I126aDdp9J5UTP9wLWRJYNMaiS81WA2QF11BoPA5jVdVSg19Y8UTDlclRUo6ePdvWbvMKFdCrT1w2LsefaWYsDhaPyvvyndZhqiI70OZsI/llcQSGeDz/PQDUUwuVScGAPaNbbuycm8PFEFtB24QRCNv6qj1SCmAISbnmUoK9sGuNOw3GiCeYoEY1ozXwTetS2lmoc4S1pDUqC2pI+SU/2saIB3qwV7I6ye5mKlCStfj9AjZYbYp9E/DdVb5qkHIsNNxBa6HKO2hGlhqgDaI1U9rGHRQTSw+YbZQouu3eYZ8o3VcTFFze2MtqUDu7HxAJSjhRanFwWd1yaQgFHdBOB7eCPpvrGpto0hVvoLnz28Dt56ASqkUJOsbGwBW6FM79Y9Lf5W/AA1DA7X5N4gzg9MAVD8kqQ+poXDIwUEa1UENCT4XcGc35dz7P5372kAePi8VH7/3v7xySxdNoNsrjKE3OUBL66XThXxjrJB1d/iSLCf04wuQGW03n0RlY+7NZtKJ/VA5fG3WYYcFt3+k+U5yFrmDYCo+gWYq4ZV29sAdRsoSKUSjXJf+bl6HaMUJWooKePIJDw5aStzuNjSpZCkeuS+bTCyPemp400SQoC3h7euqaWx+Kqaxb9guRtSTVXn+/E//lu3NExcZdtbKuXJmr43OsUZYLxT5QyfIdsDHVKQv3KDSLlz0nKYAr1puDde5gfW314UwhFT8vX06cWafQEi2bKsVCbGoJv5qr2bMjr+rbkV2wk043XWskFkmsmE8tFXR73vgffWhNztRUDZKlnEYxLAD+5PLBaa9nDmLZUa7X94UKUYvicEp6Hn3wF/nYT5M06t7KZ9Ei658WSZ5Ffpyk2SmULKLeqtnKPa6SdZT2kaU/88MoDyIaLHuY9vqRAx9X5GCC1v58mWdh+hjk8TKfJGmy6Cmrx8U0PM33KUn9PCaTDkxawih6eHSrpmZUCC6pS5Zd2QTpdDSJ3FPhUum9/83VFrllaBMVlLT93uEniI5ISvrw3zjrmgm68+cG6jJ0h3V+uGBb0lOAWY/vkSy+RybBC87qBmldqod1u9OGbiF0UulbcKW5MlvU1S2coL0AlF0iuIvKCSiQNpxCeQuQJ0DdQgGdnLfIR2px7njsMOoa84TyNij+1w8pfmp/b4L/gOBUVdmbxX+m4hN/kSzy4OFN9Z/aWPx/qPm/tZafJjlpXkuuSnSay+Ei+Nxdp5SwdNRebnMxcHf3oos0ndJpFCYfovQj3U39dOW5kdwXsrtPXL7FtohSGHeL4dUln933dXf7vPC4PPZ3uDONJPjmvUo1WIEV7vN9YP/5KvPYf1qeSX//7+HuJ//y/V9Ve5j0"
+#seed_string ="v1.eJztV8GOo0gM/RXEYffSh93VnPpGCJ1kQ0IE9EYzoxaqgJMwKcqoqmgGtebfxwUJkHTvSHPpU1+S4tnlctnPxrzYB1aAsu/torDv7AMybtbsG0pGz8dc6EVRotRMpGDfa1nBna1zceAQHav9nhNoK82kwWhDwUoXi5Ip9aZ4h0otoTnLVgVJJRT4DBkJlZaseWC5bNwjKP2mgUEn0EeQg85gJqvEAVCEUDOZDQpMNDXtAGMkldVu5EN3qxTrV5g6Yjl2dl9xTgaw5m8b7sBIYL1jnKuxoc4IyPTIhB5JUg5MRpppmHaOtzKKlD628TSZcI85zwhMK6XR5GkvAaKUSUgl1oOtothIcFKdP5O5LKg5JfbF1k1p/BQojI/PjFcm4V/pZExPGmthP/0gP1SRRie6n644650j0MX68ngCKBcaChWCAn1B90zpFVMn1QM5XROmkOvGuQSnF3G+pdCA7rVLiQcJSuXPMEOJwicf2K4xeW951tJGaw4uCg1i4EWfIqnniCda6FFYTchuTkqRE//YrQM7LHbpsZqwwyhfJXD+kEu4gba5yG4gn3g3QDtErRZ0jRtoTlpywHQl8rS97g32hdI9OiBlHMY00hLEQR8HhIPITVDK/GSyumdcEQpyJilmqAbOggzhkBO9BuhSV21KDVNWq2QSxLHvJd5qE3+27/++M1g0X3j+NJl7YXCBAtcJF2un19gG4bR/CNYz+jEKsyssXqy83sDWT1w/cJdJHGzXhBIFv1Xi5GPKdOfmV9KzpnCqrA1nzUFiJTKrK2vL4dyaskbZxpg1k8C0NWHNedU2iE40J9Y31h+kLDld9e39ixMT7PVen+0oGxplY5m0WBG2PYgkK0RhPbQ0t1qeW6YAOlmQAhMWJSQDScdXCqyOcJ3YNIcjsOz1cRFWpqfR3poVZXuahXv6ZzK/HBxpqllrg9paCGG5WJUc/lSj0897x6cboTEUy6rtKaQVU9VbDvUioLudQ/JPJ9pS65BEI26FjKwoawKMqEtPdNeLDmLWqozv8EQMlnl6Omcu8f5z1smDEwah1+5KfG8ddat1kESeMw/C6CwK1l6ycqJlEsVmSZTwwk6ycXzH9ZKJR8ai5WJjn+n0GBMdCdo6q00SueHjJJlvklkQButOJX5cL9zzeV+C0Enmju8PmuTC1Fs+Gq+pitOccWovWVsFk3AxnXlmlRLlqM39ZUqFeDTUVwEZXb+j6RmiFxDLR8/K9FI1Q9O4r6A2QzdYy5ke21M8c1Dbh1skmt8is8krnfgKaUyqB79Nm6Y+QC1eXoOxZELtURbXcIC6Byi7pGDGgDOQIl04hOwaIE6AuIYm9Mq5Rj5T4zTvlRaj0l8FlLch4p9+K+Ln3vgR8N8IOFVV9EHx94z4zFkH62Sy/Ij6uzYW519q/h+t5d1CTjEvORMZmpjzYZp7aQctkWt61fazzRyYmcpoJL3MiN4moLHSWDHfnmaW6D9g9og8V2aCYUWfS/hOX4Tt+Njr1d2n06+VGK+78e+iRjH6br+pqrAAnZuv5P/XfvrxE2v0SG4="
 # Remove the 'v1.' prefix
 if seed_string.startswith('v1.'):
    seed_string = seed_string[3:]

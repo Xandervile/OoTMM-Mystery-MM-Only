@@ -99,7 +99,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     preCompletedDungeons = False
     preCompletedDungeonsRemains = 0
 
-    ModeSettings = random.choices(["Default", "Remains Hunt", "Fairy Hunt"], [0, 15, 0])[0]
+    ModeSettings = random.choices(["Default", "Remains Hunt", "Fairy Hunt"], [80, 15, 5])[0]
     if ModeSettings == "Remains Hunt":
         RemainsHunt = True
         RemainsLocation = "anywhere"

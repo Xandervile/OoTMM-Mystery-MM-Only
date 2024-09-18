@@ -2,14 +2,21 @@ import zlib
 import base64
 import json
 import random
+import os
 
+generator_dir = os.path.dirname(os.path.abspath(__file__))
 
-MinMysterySettings = 7
+with open("weights.json", "r") as read_file:
+    data = json.load(read_file)
+
+settings = data["GameplaySettings"]
+
+MinMysterySettings = settings["MinimumSettingsAmount"]
 MysteryCount = 0
-HardCounter = 99
+HardCounter = 0
 
 # HarderSettings get rolled first to allow limitations
-HARDMODELIMIT = 2
+HARDMODELIMIT = settings["HardModeLimit"]
 
 DefaultJunkList = [
     "MM Deku Playground Reward All Days",
@@ -86,7 +93,6 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
 
     JunkList = DefaultJunkList.copy()
     HintList = DefaultHintList.copy()
-    HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
     MoonConditions = DefaultMoonConditions.copy()
     StartingItems = DefaultStartingItems.copy()
     Plando = DefaultPlando.copy()
@@ -99,10 +105,11 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     preCompletedDungeons = False
     preCompletedDungeonsRemains = 0
 
-    ModeSettings = random.choices(["Default", "Remains Hunt", "Fairy Hunt"], [80, 15, 5])[0]
+    ModeSettings = random.choices(["Default", "Remains Hunt", "Fairy Hunt"], settings["WinCon"][1])[0]
     if ModeSettings == "Remains Hunt":
         RemainsHunt = True
         RemainsLocation = "anywhere"
+        weights = settings["RemainsWeights"]
     elif ModeSettings == "Fairy Hunt":
         FairyHunt = True
         RemainsLocation = "anywhere"
@@ -116,22 +123,25 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         JunkList.remove("MM Ikana Great Fairy")
         StartingItems["MM_MASK_GREAT_FAIRY"] = 1
         ChestFairy = "anywhere"
-        HardModeBalance = True
+        weights = settings["FairyHuntWeights"]
     else:
         RemainsLocation = "dungeonbluewarps"
+        weights = settings["StandardWeights"]
+
+    HardModeBalance = weights["HardModeBalance"]
                 
     RandomStartingItem = random.choices(
         ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_FIERCE_DEITY", "MM_BOW", "MM_HOOKSHOT",
          "MM_BOMB_BAG",
          "MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_WALLET", "MM_MAGIC_UPGRADE"],
-        [0, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 10, 0])[0]
+        weights["StartingItem"][1])[0]
     if RandomStartingItem != "none":
         StartingItems[RandomStartingItem] = 1
 
     RandomStartingSong = random.choices(
         ["MM_RECOVERY_HEART", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
          "MM_SONG_ZORA",
-         "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], [0, 40, 10, 10, 10, 10, 10, 10, 0])[0] #[0, 40, 10, 10, 10, 10, 10, 10, 0]
+         "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], weights["StartingSong"][1])[0]
     add_location(Plando, "MM Initial Song of Healing", RandomStartingSong)
     if RandomStartingSong == "MM_RECOVERY_HEART":
         JunkList.remove("MM Southern Swamp Song of Soaring")
@@ -139,15 +149,15 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         MoonConditions["count"] = 0
         MoonConditions["remains"] = False
 
-    GrassShuffleWeight = [10, 90]
+    GrassShuffleWeight = weights["GrassShuffle"][1]
     GrassShuffle = random.choices([True, False], GrassShuffleWeight)[0]
     if GrassShuffle == True:
         HardCounter += 1
         MysteryCount += 1
 
-    SKeyShuffleWeight = [60, 30, 10]
+    SKeyShuffleWeight = weights["SmallKeyShuffle"][1]
     SKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], SKeyShuffleWeight)[0]
-    BKeyShuffleWeight = [60, 30, 10]
+    BKeyShuffleWeight = weights["BossKeyShuffle"][1]
     BKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], BKeyShuffleWeight)[0]
     if SKeyShuffle != "removed" or BKeyShuffle != "removed":
         MysteryCount += 1
@@ -155,40 +165,40 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
             HardCounter += 1
 
     ClockProgressiveSetting = "separate"
-    ClockShuffle = random.choices([True, False], [10, 90])[0]
+    ClockShuffle = random.choices([True, False], weights["ClockShuffle"][1])[0]
     if ClockShuffle == True:
         HardCounter += 1
         MysteryCount += 1
-        ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], [20, 30, 50])[0]
+        ClockProgressiveSetting = random.choices(["ascending", "descending", "separate"], weights["ProgressiveClockType"][1])[0]
         if ClockProgressiveSetting == "separate":
             StartingClock = \
             random.choices(["MM_CLOCK1", "MM_CLOCK2", "MM_CLOCK3", "MM_CLOCK4", "MM_CLOCK5", "MM_CLOCK6"],
-                           [10, 10, 10, 10, 10, 10])[0]
+                           weights["StartingClock"][1])[0]
             StartingItems[StartingClock] = 1
             if StartingClock != "MM_CLOCK6":
+                HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
                 HintList.insert(HintIndex, {"type": "item",
                                             "amount": 1,
                                             "extra": 1,
                                             "item": "MM_CLOCK6"})
 
-    BossSoulsWeight = [10, 90]
-    if BKeyShuffle == "anywhere":  # Having both Boss Souls and BK anywhere sounds like hell
-        BossSoulsWeight[1] += BossSoulsWeight[0]
-        BossSoulsWeight[0] = 0
+    BossSoulsWeight = weights["BossSoulsWeight"][1]
+    if BKeyShuffle == "anywhere":
+        BossSoulsWeight = weights["BossSoulsWeight"][2]
     SharedBossSoulShuffle = random.choices([True, False], BossSoulsWeight)[0]
     if SharedBossSoulShuffle == True:
         HardCounter += 1
         MysteryCount += 1
 
-    FreestandingShuffle = random.choices([True, False], [20, 80])[0]
-    WonderSpotShuffle = random.choices([True, False], [20, 80])[0]
+    FreestandingShuffle = random.choices([True, False], weights["FreestandingShuffle"][1])[0]
+    WonderSpotShuffle = random.choices([True, False], weights["WonderSpotShuffle"][1])[0]
     if FreestandingShuffle != False or WonderSpotShuffle != False:
         MysteryCount += 1
         HintRegions = True
         if FreestandingShuffle != False and WonderSpotShuffle != False:
             HardCounter += 1
 
-    PotShuffle = random.choices([True, False], [15, 85])[0]
+    PotShuffle = random.choices([True, False], weights["PotShuffle"][1])[0]
     if PotShuffle == True:
         HintRegions = True
         MysteryCount += 1
@@ -197,7 +207,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
 
     FriendSoulShuffle = False
     EnemySoulShuffle = False
-    SoulShuffle = random.choices(["none", "friends", "enemies", "both"], [85, 5, 10, 0])[0]
+    SoulShuffle = random.choices(["none", "friends", "enemies", "both"], weights["SoulShuffle"][1])[0]
     if SoulShuffle != "none":
         MysteryCount += 1
         HardCounter += 1
@@ -211,7 +221,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
 
     LongQuest = random.choices(
         ["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"],
-        [35, 20, 15, 30])[0] #[35, 20, 15, 30]
+        weights["LongQuest"][1])[0] #[35, 20, 15, 30]
     if LongQuest != "none" and LongQuest in JunkList:
         JunkList.remove(LongQuest)
         if LongQuest == "MM Laboratory Zora Song":
@@ -223,7 +233,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     RegionsER = "none"
     # Overworld and Interior ER last because screw it
     EntranceRandomizer = \
-        random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], [70, 15, 6, 6, 3])[0] #[70, 15, 6, 6, 3]
+        random.choices(["none", "Regions Only", "Exterior Only", "Interior Only", "All"], weights["WorldEntranceRandomizer"][1])[0]
     if EntranceRandomizer == "Regions Only":  # Not Hard due to only 5 entrances shuffling
         MysteryCount += 1
         RegionsER = "full"
@@ -245,7 +255,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         # Also to add: Mixed?
 
     # Other Settings get Randomized here
-    SongShuffle = random.choices(["songLocations", "anywhere"], [65, 35])[0] #[65, 35]
+    SongShuffle = random.choices(["songLocations", "anywhere"], weights["SongShuffle"][1])[0]
     if SongShuffle == "anywhere":
         MysteryCount += 1
         if "MM Southern Swamp Song of Soaring" in JunkList:
@@ -255,70 +265,65 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
             JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
 
     TownFairy = "vanilla"
-    FairyWeight = [70, 30]
-    if FairyHunt == True:
-        FairyWeight = [0, 100]
+    FairyWeight = weights["StrayFairyShuffle"][1]
     StrayFairyShuffle = random.choices(["removed", "anywhere"], FairyWeight)[0]
     if StrayFairyShuffle != "removed":
         MysteryCount += 1
         TownFairy = "anywhere"
 
-    NoStartingWeapon = random.choices([True, False], [25, 75])[0]
+    NoStartingWeapon = random.choices([True, False], weights["NoStartingWeapon"][1])[0]
     if NoStartingWeapon == False:
         StartingItems["MM_SWORD"] = 1
         StartingItems["MM_SHIELD_HERO"] = 1
 
     ExtraDungeonEntranceShuffle = False
-    erDungeons = random.choices(["none", "full"], [45, 55])[0]
+    erDungeons = random.choices(["none", "full"], weights["DungeonEntranceShuffle"][1])[0]
     if erDungeons == "full":
-        ExtraDungeonEntranceShuffle = random.choices([True, False], [40, 60])[0]
+        ExtraDungeonEntranceShuffle = random.choices([True, False], weights["ExtraDungeonEntranceShuffle"][1])[0]
 
-    BossEntranceShuffle = random.choices(["none", "full"], [70, 30])[0]
+    BossEntranceShuffle = random.choices(["none", "full"], weights["BossEntranceShuffle"][1])[0]
     if BossEntranceShuffle == "full" or erDungeons == "full":
         MysteryCount += 1
 
     ScrubShuffle = False
-    SharedShopShuffle = random.choices(["none", "full"], [60, 40])[0]
+    SharedShopShuffle = random.choices(["none", "full"], weights["ShopShuffle"][1])[0]
     if SharedShopShuffle != "none":
-        ScrubShuffle = random.choices([True, False], [50, 50])[0]
+        ScrubShuffle = random.choices([True, False], weights["MerchantShuffle"][1])[0]
         MysteryCount += 1
 
-    SharedCowShuffle = random.choices([True, False], [30, 70])[0]
+    SharedCowShuffle = random.choices([True, False], weights["CowShuffle"][1])[0]
     if SharedCowShuffle == True:
         MysteryCount += 1
 
-    SharedCratesAndBarrels = random.choices([True, False], [30, 70])[0]
+    SharedCratesAndBarrels = random.choices([True, False], weights["CratesAndBarrelsShuffle"][1])[0]
     if SharedCratesAndBarrels == True:
         MysteryCount += 1
 
-    SnowballWeight = [20, 80]
-    if ClockShuffle == True:
-        SnowballWeight = [5, 95]
+    SnowballWeight = weights["SnowballShuffle"][1]
     SnowballShuffle = random.choices([True, False], SnowballWeight)[0]
     if SnowballShuffle == True:
         MysteryCount += 1
 
-    SkulltulaShuffle = random.choices(["none", "all"], [80, 20])[0]
+    SkulltulaShuffle = random.choices(["none", "all"], weights["SkulltulaShuffle"][1])[0]
     if SkulltulaShuffle == "all":
         HintRegions = True
         MysteryCount += 1
 
-    GrottoShuffle = random.choices(["none", "full"], [80, 20])[0]
+    GrottoShuffle = random.choices(["none", "full"], weights["GrottoShuffle"][1])[0]
     if GrottoShuffle == "full":
         MysteryCount += 1
 
-    OwlWeight = [10, 90]
+    OwlWeight = weights["OwlShuffle"][1]
     if EntranceRandomizer == "full" or "Exterior Only":
-        OwlWeight = [0, 100]
+        OwlWeight = weights["OwlShuffle"][2]
     OwlShuffle = random.choices(["anywhere", "none"], OwlWeight)[0]
     if OwlShuffle == "anywhere":
         MysteryCount += 1
         StartingItems["MM_OWL_CLOCK_TOWN"] = 1
 
-    WalletShuffleWeight = [30, 70]
+    WalletShuffleWeight = weights["ChildWallet"][1]
     if RandomStartingItem == "MM_WALLET":
-        WalletShuffleWeight[1] += WalletShuffleWeight[0]
-        WalletShuffleWeight[0] = 0
+        WalletShuffleWeight = weights["ChildWallet"][2]
     NoWalletShuffle = random.choices([True, False], WalletShuffleWeight)[0]
     if NoWalletShuffle == True:
         MysteryCount += 1
@@ -475,31 +480,16 @@ encoded_data = encoded_data.rstrip("=")
 # Format the final seed string (prepend 'v1.' to the encoded string)
 seed_string = f"v1.{encoded_data}"
 
-# Output the result
-print("Encoded Seed String:")
-print(seed_string)
-#print(HardCounter)
-#print(MysteryCount)
+with open("ootmmmysterymm_seed_output.txt", "w") as file:
+    file.write("Seed String:\n")
+    file.write("\n")
+    file.write(seed_string)
 
-#seed_string ="v1.eJztV8GOo0gM/RXEYffSh93VnPpGCJ1kQ0IE9EYzoxaqgJMwKcqoqmgGtebfxwUJkHTvSHPpU1+S4tnlctnPxrzYB1aAsu/torDv7AMybtbsG0pGz8dc6EVRotRMpGDfa1nBna1zceAQHav9nhNoK82kwWhDwUoXi5Ip9aZ4h0otoTnLVgVJJRT4DBkJlZaseWC5bNwjKP2mgUEn0EeQg85gJqvEAVCEUDOZDQpMNDXtAGMkldVu5EN3qxTrV5g6Yjl2dl9xTgaw5m8b7sBIYL1jnKuxoc4IyPTIhB5JUg5MRpppmHaOtzKKlD628TSZcI85zwhMK6XR5GkvAaKUSUgl1oOtothIcFKdP5O5LKg5JfbF1k1p/BQojI/PjFcm4V/pZExPGmthP/0gP1SRRie6n644650j0MX68ngCKBcaChWCAn1B90zpFVMn1QM5XROmkOvGuQSnF3G+pdCA7rVLiQcJSuXPMEOJwicf2K4xeW951tJGaw4uCg1i4EWfIqnniCda6FFYTchuTkqRE//YrQM7LHbpsZqwwyhfJXD+kEu4gba5yG4gn3g3QDtErRZ0jRtoTlpywHQl8rS97g32hdI9OiBlHMY00hLEQR8HhIPITVDK/GSyumdcEQpyJilmqAbOggzhkBO9BuhSV21KDVNWq2QSxLHvJd5qE3+27/++M1g0X3j+NJl7YXCBAtcJF2un19gG4bR/CNYz+jEKsyssXqy83sDWT1w/cJdJHGzXhBIFv1Xi5GPKdOfmV9KzpnCqrA1nzUFiJTKrK2vL4dyaskbZxpg1k8C0NWHNedU2iE40J9Y31h+kLDld9e39ixMT7PVen+0oGxplY5m0WBG2PYgkK0RhPbQ0t1qeW6YAOlmQAhMWJSQDScdXCqyOcJ3YNIcjsOz1cRFWpqfR3poVZXuahXv6ZzK/HBxpqllrg9paCGG5WJUc/lSj0897x6cboTEUy6rtKaQVU9VbDvUioLudQ/JPJ9pS65BEI26FjKwoawKMqEtPdNeLDmLWqozv8EQMlnl6Omcu8f5z1smDEwah1+5KfG8ddat1kESeMw/C6CwK1l6ycqJlEsVmSZTwwk6ycXzH9ZKJR8ai5WJjn+n0GBMdCdo6q00SueHjJJlvklkQButOJX5cL9zzeV+C0Enmju8PmuTC1Fs+Gq+pitOccWovWVsFk3AxnXlmlRLlqM39ZUqFeDTUVwEZXb+j6RmiFxDLR8/K9FI1Q9O4r6A2QzdYy5ke21M8c1Dbh1skmt8is8krnfgKaUyqB79Nm6Y+QC1eXoOxZELtURbXcIC6Byi7pGDGgDOQIl04hOwaIE6AuIYm9Mq5Rj5T4zTvlRaj0l8FlLch4p9+K+Ln3vgR8N8IOFVV9EHx94z4zFkH62Sy/Ij6uzYW519q/h+t5d1CTjEvORMZmpjzYZp7aQctkWt61fazzRyYmcpoJL3MiN4moLHSWDHfnmaW6D9g9og8V2aCYUWfS/hOX4Tt+Njr1d2n06+VGK+78e+iRjH6br+pqrAAnZuv5P/XfvrxE2v0SG4="
-# Remove the 'v1.' prefix
-if seed_string.startswith('v1.'):
-   seed_string = seed_string[3:]
-
-# Add padding back if needed
-seed_string += '=' * (-len(seed_string) % 4)
-
-# Base64 decode
-decoded_bytes = base64.urlsafe_b64decode(seed_string)
-
-# Decompress using zlib
-decompressed_bytes = zlib.decompress(decoded_bytes)
-
-# Convert bytes to JSON string
-settings_json = decompressed_bytes.decode('utf-8')
-
-# Parse the JSON string into Python dictionary
-settings_data = json.loads(settings_json)
-
-# Print the result
-print(settings_data)
+with open("ootmmmysterymm_settings_output.txt", "w") as file:
+    file.write(f"{ModeSettings} Settings Spoiler:\n")
+    file.write("\n")
+    file.write(f"Settings Counter: {MysteryCount}\n")
+    file.write(f"Hard Settings: {HardCounter}\n")
+    file.write("\n")
+    for key, value in settings_data.items():
+        file.write(f"{key}: {value}\n")

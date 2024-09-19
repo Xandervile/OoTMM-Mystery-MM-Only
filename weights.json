@@ -1,6 +1,7 @@
 {
   "GameplaySettings": {
 	  "MinimumSettingsAmount":5,
+	  "MaximumSettingsAmount":99,
 	  "HardModeLimit":2,
 	  
 	  "WinCon":[["Default", "Remains Hunt", "Fairy Hunt"], [80, 15, 5]],

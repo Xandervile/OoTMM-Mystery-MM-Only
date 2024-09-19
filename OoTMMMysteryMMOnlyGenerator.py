@@ -12,6 +12,7 @@ with open("weights.json", "r") as read_file:
 settings = data["GameplaySettings"]
 
 MinMysterySettings = settings["MinimumSettingsAmount"]
+MaxMysterySettings = settings["MaximumSettingsAmount"]
 MysteryCount = 0
 HardCounter = 0
 
@@ -84,7 +85,7 @@ DefaultPlando = {"locations": {}}
 def add_location(location_header, location_name, location_value):
     location_header["locations"][location_name] = location_value
 
-while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
+while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or MysteryCount > MaxMysterySettings:
     MysteryCount = 0
     HardCounter = 0
     HardModeBalance = False

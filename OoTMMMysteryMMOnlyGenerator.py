@@ -142,7 +142,6 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         ["MM_RECOVERY_HEART", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
          "MM_SONG_ZORA",
          "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], weights["StartingSong"][1])[0]
-    add_location(Plando, "MM Initial Song of Healing", RandomStartingSong)
     if RandomStartingSong == "MM_RECOVERY_HEART":
         JunkList.remove("MM Southern Swamp Song of Soaring")
     if RandomStartingSong == "MM_SONG_ORDER":
@@ -284,7 +283,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         # Also to add: Mixed?
 
     # Other Settings get Randomized here
-    SongShuffle = random.choices(["songLocations", "anywhere"], weights["SongShuffle"][1])[0]
+    SongShuffle = random.choices(["songLocations", "Mixed with Owls", "anywhere"], weights["SongShuffle"][1])[0]
     if SongShuffle == "anywhere":
         MysteryCount += 1
         if "MM Southern Swamp Song of Soaring" in JunkList:
@@ -292,6 +291,29 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         if "MM Clock Tower Roof Skull Kid Song of Time" not in JunkList:
             JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
             JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
+    if SongShuffle == "Mixed with Owls":
+        SongShuffle = "anywhere"
+        MysteryCount += 1
+        SongAndOwlList = ["MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING",
+                      "MM_SONG_GORON", "MM_SONG_ZORA", "MM_SONG_EMPTINESS", "MM_SONG_ORDER", "MM_OWL_CLOCK_TOWN", "MM_OWL_MILK_ROAD",
+                      "MM_OWL_SOUTHERN_SWAMP", "MM_OWL_WOODFALL", "MM_OWL_MOUNTAIN_VILLAGE", "MM_OWL_SNOWHEAD",
+                      "MM_OWL_GREAT_BAY", "MM_OWL_ZORA_CAPE", "MM_OWL_IKANA_CANYON", "MM_OWL_STONE_TOWER"]
+        SongAndOwlLocation = ["MM Initial Song of Healing", "MM Clock Tower Roof Skull Kid Song of Time",
+                          "MM Romani Ranch Epona Song",
+                          "MM Beneath The Graveyard Song of Storms", "MM Deku Palace Sonata of Awakening",
+                          "MM Goron Elder", "MM Ancient Castle of Ikana Song Emptiness", "MM Oath to Order", "MM Clock Town Owl Statue",
+                          "MM Milk Road Owl Statue", "MM Southern Swamp Owl Statue", "MM Woodfall Owl Statue",
+                          "MM Mountain Village Owl Statue", "MM Snowhead Owl Statue", "MM Great Bay Coast Owl Statue",
+                          "MM Zora Cape Owl Statue", "MM Ikana Canyon Owl Statue", "MM Stone Tower Owl Statue"]
+        if "MM Clock Tower Roof Skull Kid Song of Time" in JunkList:
+            SongAndOwlLocation.remove("MM Clock Tower Roof Skull Kid Song of Time")
+            SongAndOwlLocation.append("MM Laboratory Zora Song")
+        for key in SongAndOwlLocation:
+            ChosenItem = random.choice(SongAndOwlList)
+            add_location(Plando, key, ChosenItem)
+            SongAndOwlList.remove(ChosenItem)
+    else:
+        add_location(Plando, "MM Initial Song of Healing", RandomStartingSong)          #Adds Random Starting Song only if not Owls and Songs
 
     TownFairy = "vanilla"
     FairyWeight = weights["StrayFairyShuffle"][1]
@@ -355,10 +377,14 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
     OwlWeight = weights["OwlShuffle"][1]
     if EntranceRandomizer == "full" or "Exterior Only":
         OwlWeight = weights["OwlShuffle"][2]
+    if SongShuffle == "Mixed with Owls":
+        OwlWeight = [0, 100]
     OwlShuffle = random.choices(["anywhere", "none"], OwlWeight)[0]
     if OwlShuffle == "anywhere":
         MysteryCount += 1
         StartingItems["MM_OWL_CLOCK_TOWN"] = 1
+    if SongShuffle == "Mixed with Owls":
+        OwlShuffle = "anywhere"
 
     WalletShuffleWeight = weights["ChildWallet"][1]
     if RandomStartingItem == "MM_WALLET":

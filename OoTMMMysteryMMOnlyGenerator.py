@@ -295,16 +295,17 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         SongShuffle = "anywhere"
         MysteryCount += 1
         SongAndOwlList = ["MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING",
-                      "MM_SONG_GORON", "MM_SONG_ZORA", "MM_SONG_EMPTINESS", "MM_SONG_ORDER", "MM_OWL_CLOCK_TOWN", "MM_OWL_MILK_ROAD",
+                      "MM_SONG_GORON", "MM_SONG_ZORA", "MM_SONG_EMPTINESS", "MM_SONG_ORDER", "MM_OWL_MILK_ROAD",
                       "MM_OWL_SOUTHERN_SWAMP", "MM_OWL_WOODFALL", "MM_OWL_MOUNTAIN_VILLAGE", "MM_OWL_SNOWHEAD",
                       "MM_OWL_GREAT_BAY", "MM_OWL_ZORA_CAPE", "MM_OWL_IKANA_CANYON", "MM_OWL_STONE_TOWER"]
-        SongAndOwlLocation = ["MM Initial Song of Healing", "MM Clock Tower Roof Skull Kid Song of Time",
+        SongAndOwlLocation = ["MM Clock Tower Roof Skull Kid Song of Time",
                           "MM Romani Ranch Epona Song",
                           "MM Beneath The Graveyard Song of Storms", "MM Deku Palace Sonata of Awakening",
                           "MM Goron Elder", "MM Ancient Castle of Ikana Song Emptiness", "MM Oath to Order", "MM Clock Town Owl Statue",
                           "MM Milk Road Owl Statue", "MM Southern Swamp Owl Statue", "MM Woodfall Owl Statue",
                           "MM Mountain Village Owl Statue", "MM Snowhead Owl Statue", "MM Great Bay Coast Owl Statue",
                           "MM Zora Cape Owl Statue", "MM Ikana Canyon Owl Statue", "MM Stone Tower Owl Statue"]
+        add_location(Plando, "MM Initial Song of Healing", "MM_OWL_CLOCK_TOWN")
         if "MM Clock Tower Roof Skull Kid Song of Time" in JunkList:
             SongAndOwlLocation.remove("MM Clock Tower Roof Skull Kid Song of Time")
             SongAndOwlLocation.append("MM Laboratory Zora Song")

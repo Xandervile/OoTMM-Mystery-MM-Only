@@ -189,6 +189,24 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
     if SharedBossSoulShuffle == True:
         HardCounter += 1
         MysteryCount += 1
+        if ModeSettings == "Default":
+            HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_ODOLWA"})
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_GOHT"})
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_GYORG"})
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_TWINMOLD"})
 
     FreestandingShuffle = random.choices([True, False], weights["FreestandingShuffle"][1])[0]
     WonderSpotShuffle = random.choices([True, False], weights["WonderSpotShuffle"][1])[0]
@@ -217,7 +235,14 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
             EnemySoulShuffle = True
         else:
             FriendSoulShuffle = True
-            EnemySoulShuffle = True     
+            EnemySoulShuffle = True
+
+    if FriendSoulShuffle == True:
+        HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
+        HintList.insert(HintIndex, {"type": "item",
+                                    "amount": 1,
+                                    "extra": 1,
+                                    "item": "MM_SOUL_NPC_MOON_CHILDREN"})
 
     LongQuest = random.choices(
         ["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"],
@@ -368,7 +393,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
 
     if HardCounter >= HARDMODELIMIT and HardModeBalance == True:
         preCompletedDungeons = True
-        preCompletedDungeonsRemains = random.choices([1, 2], [80, 20])[0]
+        preCompletedDungeonsRemains = random.choices([0, 1, 2], [0, 80, 20])[0]
 
 # Rest of the settings are not stored already so are randomised here. To add:
 settings_data = {

@@ -4,6 +4,9 @@
 	  "MaximumSettingsAmount":99,
 	  "HardModeLimit":2,
 	  
+	  "LogicSettings":[["beatable", "none", "allLocations"], [10, 0, 90], "Logic settings for the seed"],
+	  "ItemPool":[["plentiful", "normal", "scarce", "minimal", "barren"], [0, 100, 0, 0, 0], "Item Quantity for the seed"],
+	  
 	  "WinCon":[["Default", "Remains Hunt", "Triforce Hunt", "Triforce Quest"], [80, 0, 0, 0]],
 	  
 	  "StandardWeights":{
@@ -13,9 +16,9 @@
 		  "NoStartingWeapon": [[true, false], [25, 75]],
 	  
 		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [65, 25, 10], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting"],
-		  "GrassShuffle": [[true, false], [10, 90], "Hard Setting for now, could be changed?"],
-		  "PotShuffle":[[true, false], [15, 85], "Hard Setting"],
-		  "FreestandingShuffle":[[true, false], [20, 80]],
+		  "GrassShuffle": [["none", "all"], [10, 90], "Hard Setting for now, could be changed?"],
+		  "PotShuffle":[["none", "overworld", "dungeons", "all"], [75, 10, 10, 5], "Hard Setting if all"],
+		  "FreestandingShuffle":[["none", "overworld", "dungeons", "all"], [60, 15, 15, 10]],
 		  "WonderSpotShuffle":[[true, false], [20, 80], "Hard Setting if also Freestanding"],
 		  "ShopShuffle":[["none", "full"], [60, 40]],
 		  "MerchantShuffle":[[true, false], [50, 50], "Affects all non-shop merchants and ALL Business scrubs, only happens alongside ShopShuffle"],
@@ -23,8 +26,8 @@
 		  "ButterflyAndFairyShuffle":[[true, false], [25, 75]],
 		  "HiveShuffle":[[true, false], [20, 80]],
 		  "CowShuffle":[[true, false], [30, 70]],
-		  "CratesAndBarrelsShuffle":[[true, false], [30, 70]],
-		  "SnowballShuffle":[[true, false], [20, 80], "I don't think these are time dependent like MMR but to check, if so will make seperate weights for clock shuffle"],
+		  "CratesAndBarrelsShuffle":[["none", "overworld", "dungeons", "all"], [60, 15, 15, 5]],
+		  "SnowballShuffle":[["none", "overworld", "dungeons", "all"], [75, 10, 10, 5]],
 		  "SkulltulaShuffle":[["none", "all"], [80, 20], "Happy to add 'specific cases' like OoT separate to MM"],
 
 		  "ClockShuffle":[[true, false], [10, 90], "Hard Setting"],
@@ -65,9 +68,9 @@
 		  "NoStartingWeapon": [[true, false], [25, 75]],
 	  
 		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [65, 25, 10], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting"],
-		  "GrassShuffle": [[true, false], [10, 90], "Hard Setting for now, could be changed?"],
-		  "PotShuffle":[[true, false], [15, 85], "Hard Setting"],
-		  "FreestandingShuffle":[[true, false], [20, 80]],
+		  "GrassShuffle": [["none", "all"], [10, 90], "Hard Setting for now, could be changed?"],
+		  "PotShuffle":[["none", "overworld", "dungeons", "all"], [75, 10, 10, 5], "Hard Setting if all"],
+		  "FreestandingShuffle":[["none", "overworld", "dungeons", "all"], [60, 15, 15, 10]],
 		  "WonderSpotShuffle":[[true, false], [20, 80], "Hard Setting if also Freestanding"],
 		  "ShopShuffle":[["none", "full"], [60, 40]],
 		  "MerchantShuffle":[[true, false], [50, 50], "Affects all non-shop merchants and ALL Business scrubs, only happens alongside ShopShuffle"],
@@ -75,8 +78,8 @@
 		  "ButterflyAndFairyShuffle":[[true, false], [25, 75]],
 		  "HiveShuffle":[[true, false], [20, 80]],
 		  "CowShuffle":[[true, false], [30, 70]],
-		  "CratesAndBarrelsShuffle":[[true, false], [30, 70]],
-		  "SnowballShuffle":[[true, false], [20, 80], "I don't think these are time dependent like MMR but to check, if so will make seperate weights for clock shuffle"],
+		  "CratesAndBarrelsShuffle":[["none", "overworld", "dungeons", "all"], [60, 15, 15, 5]],
+		  "SnowballShuffle":[["none", "overworld", "dungeons", "all"], [75, 10, 10, 5]],
 		  "SkulltulaShuffle":[["none", "all"], [80, 20], "Happy to add 'specific cases' like OoT separate to MM"],
 
 		  "ClockShuffle":[[true, false], [10, 90], "Hard Setting"],
@@ -91,18 +94,18 @@
 		  "BossSoulsWeight": [[true, false], [10, 90], [0, 100], "Weight 1: No BKeysanity, Weight 2: BKeysanity, Hard Setting"],
 		  "StrayFairyShuffle": [["removed", "Anywhere"], [70, 30], "Only Affects Freeflying fairies and CT Fairy"],
 		  
-		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [0, 0, 0, 0, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
-		  "DungeonEntranceShuffle": [["none", "full"], [45, 55]],
+		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [60, 20, 9, 9, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
+		  "DungeonEntranceShuffle": [["none", "full"], [55, 45]],
 		  "BossEntranceShuffle":[["none", "full"], [80, 20]],
 		  "GrottoShuffle":[["none", "full"], [80, 20]],
 		  
 		  "Mixed":{
 			"Allow":[["full", "none"], [0, 100], "For the masochists, I have included Mixed Entrance Shuffle as a Mystery Setting too. By default this is off but I did check if it worked in the generator and it does"],
-			"Regions":[[true, false], [0, 10]],
-			"Overworld":[[true, false], [0, 10]],
-			"Interior":[[true, false], [0, 10]],
-			"Grottos":[[true, false], [0, 10]],
-			"Dungeons":[[true, false], [0, 10]]
+			"Regions":[[true, false], [0, 100]],
+			"Overworld":[[true, false], [0, 100]],
+			"Interior":[[true, false], [0, 100]],
+			"Grottos":[[true, false], [0, 100]],
+			"Dungeons":[[true, false], [0, 100]]
 		  },
 		  
 		  "DecoupledEntrances":[[true, false], [0, 100]],
@@ -117,9 +120,9 @@
 		  "NoStartingWeapon": [[true, false], [25, 75]],
 	  
 		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [65, 25, 10], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting"],
-		  "GrassShuffle": [[true, false], [10, 90], "Hard Setting for now, could be changed?"],
-		  "PotShuffle":[[true, false], [15, 85], "Hard Setting"],
-		  "FreestandingShuffle":[[true, false], [20, 80]],
+		  "GrassShuffle": [["none", "all"], [10, 90], "Hard Setting for now, could be changed?"],
+		  "PotShuffle":[["none", "overworld", "dungeons", "all"], [75, 10, 10, 5], "Hard Setting if all"],
+		  "FreestandingShuffle":[["none", "overworld", "dungeons", "all"], [60, 15, 15, 10]],
 		  "WonderSpotShuffle":[[true, false], [20, 80], "Hard Setting if also Freestanding"],
 		  "ShopShuffle":[["none", "full"], [60, 40]],
 		  "MerchantShuffle":[[true, false], [50, 50], "Affects all non-shop merchants and ALL Business scrubs, only happens alongside ShopShuffle"],
@@ -127,8 +130,8 @@
 		  "ButterflyAndFairyShuffle":[[true, false], [25, 75]],
 		  "HiveShuffle":[[true, false], [20, 80]],
 		  "CowShuffle":[[true, false], [30, 70]],
-		  "CratesAndBarrelsShuffle":[[true, false], [30, 70]],
-		  "SnowballShuffle":[[true, false], [20, 80], "I don't think these are time dependent like MMR but to check, if so will make seperate weights for clock shuffle"],
+		  "CratesAndBarrelsShuffle":[["none", "overworld", "dungeons", "all"], [60, 15, 15, 5]],
+		  "SnowballShuffle":[["none", "overworld", "dungeons", "all"], [75, 10, 10, 5]],
 		  "SkulltulaShuffle":[["none", "all"], [80, 20], "Happy to add 'specific cases' like OoT separate to MM"],
 
 		  "ClockShuffle":[[true, false], [10, 90], "Hard Setting"],
@@ -143,18 +146,18 @@
 		  "BossSoulsWeight": [[true, false], [10, 90], [0, 100], "Weight 1: No BKeysanity, Weight 2: BKeysanity, Hard Setting"],
 		  "StrayFairyShuffle": [["removed", "Anywhere"], [70, 30], "Only Affects Freeflying fairies and CT Fairy"],
 		  
-		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [0, 0, 0, 0, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
-		  "DungeonEntranceShuffle": [["none", "full"], [45, 55]],
+		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [60, 20, 9, 9, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
+		  "DungeonEntranceShuffle": [["none", "full"], [55, 45]],
 		  "BossEntranceShuffle":[["none", "full"], [80, 20]],
 		  "GrottoShuffle":[["none", "full"], [80, 20]],
 		  
 		  "Mixed":{
 			"Allow":[["full", "none"], [0, 100], "For the masochists, I have included Mixed Entrance Shuffle as a Mystery Setting too. By default this is off but I did check if it worked in the generator and it does"],
-			"Regions":[[true, false], [0, 10]],
-			"Overworld":[[true, false], [0, 10]],
-			"Interior":[[true, false], [0, 10]],
-			"Grottos":[[true, false], [0, 10]],
-			"Dungeons":[[true, false], [0, 10]]
+			"Regions":[[true, false], [0, 100]],
+			"Overworld":[[true, false], [0, 100]],
+			"Interior":[[true, false], [0, 100]],
+			"Grottos":[[true, false], [0, 100]],
+			"Dungeons":[[true, false], [0, 100]]
 		  },
 		  
 		  "DecoupledEntrances":[[true, false], [0, 100]],

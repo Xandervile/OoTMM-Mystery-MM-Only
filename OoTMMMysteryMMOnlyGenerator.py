@@ -129,7 +129,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         WinCond = "majora"
 
     HardModeBalance = weights["HardModeBalance"]
-                
+
     RandomStartingItem = random.choices(
         ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_FIERCE_DEITY", "MM_BOW", "MM_HOOKSHOT",
          "MM_BOMB_BAG",
@@ -207,12 +207,12 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
                                         "extra": 1,
                                         "item": "MM_SOUL_BOSS_TWINMOLD"})
 
-    FreestandingShuffle = random.choices([True, False], weights["FreestandingShuffle"][1])[0]
+    FreestandingShuffle = random.choices(["none", "dungeons", "overworld", "all"], weights["FreestandingShuffle"][1])[0]
     WonderSpotShuffle = random.choices([True, False], weights["WonderSpotShuffle"][1])[0]
-    if FreestandingShuffle != False or WonderSpotShuffle != False:
+    if FreestandingShuffle != "none" or WonderSpotShuffle != False:
         MysteryCount += 1
         HintRegions = True
-        if FreestandingShuffle != False and WonderSpotShuffle != False:
+        if FreestandingShuffle == "all" and WonderSpotShuffle != False:
             HardCounter += 1
 
     PotShuffle = random.choices([True, False], weights["PotShuffle"][1])[0]
@@ -348,13 +348,13 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
     if SharedCowShuffle == True:
         MysteryCount += 1
 
-    SharedCratesAndBarrels = random.choices([True, False], weights["CratesAndBarrelsShuffle"][1])[0]
-    if SharedCratesAndBarrels == True:
+    SharedCratesAndBarrels = random.choices(["all", "none"], weights["CratesAndBarrelsShuffle"][1])[0]
+    if SharedCratesAndBarrels == "all":
         MysteryCount += 1
 
-    SnowballWeight = weights["SnowballShuffle"][1]
-    SnowballShuffle = random.choices([True, False], SnowballWeight)[0]
-    if SnowballShuffle == True:
+    SnowballIcicleRedBoulderWeight = weights["SnowballIcicleRedBoulderShuffle"][1]
+    SnowballShuffle = random.choices(["all", "none"], SnowballIcicleRedBoulderWeight)[0]
+    if SnowballShuffle == "all":
         MysteryCount += 1
 
     ButterflyAndFairyShuffle = random.choices([True, False], weights["ButterflyAndFairyShuffle"][1])[0]
@@ -454,11 +454,13 @@ settings_data = {
     "shuffleHivesMm": HiveShuffle,
     "shuffleGrassMm": GrassShuffle,
     "shuffleFreeRupeesMm": FreestandingShuffle,
-    "shuffleFreeHeartsMm": FreestandingShuffle,
+    "shuffleFreeHeartsMm": FreestandingShuffle == "dungeons" or FreestandingShuffle == "all",
     "shuffleWonderItemsMm": WonderSpotShuffle,
     "shuffleSnowballsMm": SnowballShuffle,
     "shuffleButterfliesMm": ButterflyAndFairyShuffle,
     "shuffleMerchantsMm": ScrubShuffle,
+    "shuffleIciclesMm": SnowballShuffle == "all",
+    "shuffleRedBouldersMm": SnowballShuffle == "all",
     "fairyFountainFairyShuffleMm": ButterflyAndFairyShuffle,
     "clearStateDungeonsMm": "both",
     "beneathWell": "remorseless",
@@ -592,29 +594,3 @@ with open("ootmmmysterymm_settings_output.txt", "w") as file:
     file.write("\n")
     for key, value in settings_data.items():
         file.write(f"{key}: {value}\n")
-
-def decode_seed_string(seed_string):
-    # Step 1: Remove the "v1." prefix
-    if seed_string.startswith("v1."):
-        encoded_data = seed_string[3:]
-    else:
-        raise ValueError("Invalid seed string format, missing 'v1.' prefix")
-
-    # Step 2: Add padding back to the base64 string if needed
-    padded_encoded_data = encoded_data + "=" * ((4 - len(encoded_data) % 4) % 4)
-
-    # Step 3: Base64 decode
-    compressed_data = base64.urlsafe_b64decode(padded_encoded_data)
-
-    # Step 4: Decompress using zlib
-    decompressed_data = zlib.decompress(compressed_data)
-
-    # Step 5: Load JSON data
-    settings_data = json.loads(decompressed_data.decode("utf-8"))
-
-    return settings_data
-
-# Example usage
-seed_string = "v1.eJyrVkpPzE0tVrJSys1V0lFKz0/MAbJLijLT8ouSU4EiBUWpzvm5BTmpJakpLqV56an5eUDVJUWlqdjlfBOz8ouUrIywywal5iZmggwwqgUASfcr8A=="
-settings_data = decode_seed_string(seed_string)
-print(settings_data)

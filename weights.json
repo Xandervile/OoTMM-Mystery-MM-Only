@@ -4,7 +4,7 @@
 	  "MaximumSettingsAmount":99,
 	  "HardModeLimit":2,
 	  
-	  "WinCon":[["Default", "Remains Hunt", "Triforce Hunt", "Triforce Quest"], [80, 0, 0, 0]],
+	  "WinCon":[["Default", "Remains Hunt", "Triforce Hunt", "Triforce Quest"], [70, 20, 0, 10]],
 	  
 	  "StandardWeights":{
 		  "StartingItem": [["None", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_FIERCE_DEITY", "MM_BOW", "MM_HOOKSHOT","MM_BOMB_BAG"," MM_MASK_BLAST", "MM_BOTTLE_EMPTY", "MM_MASK_BUNNY", "MM_GREAT_FAIRY_SWORD", "MM_WALLET", "MM_MAGIC_UPGRADE"], [0, 10, 10, 10, 10, 10, 10, 5, 5, 10, 5, 5, 10, 0]],
@@ -12,10 +12,10 @@
 		  "LongQuest": [["none", "Anju and Kafei", "Zora Eggs", "Frog Choir"], [35, 20, 15, 30], "Hard Setting"],
 		  "NoStartingWeapon": [[true, false], [25, 75]],
 	  
-		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [0, 25, 0], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting, and you guarantee to start with Clock Town Owl"],
+		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [60, 25, 15], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting, and you guarantee to start with Clock Town Owl"],
 		  "GrassShuffle": [[true, false], [10, 90], "Hard Setting for now, could be changed?"],
 		  "PotShuffle":[[true, false], [15, 85], "Hard Setting"],
-		  "FreestandingShuffle":[[true, false], [20, 80]],
+		  "FreestandingShuffle":[["none","dungeons","overworld","all"], [65, 15, 15, 5]],
 		  "WonderSpotShuffle":[[true, false], [20, 80], "Hard Setting if also Freestanding"],
 		  "ShopShuffle":[["none", "full"], [60, 40]],
 		  "MerchantShuffle":[[true, false], [50, 50], "Affects all non-shop merchants and ALL Business scrubs, only happens alongside ShopShuffle"],
@@ -24,7 +24,7 @@
 		  "HiveShuffle":[[true, false], [20, 80]],
 		  "CowShuffle":[[true, false], [30, 70]],
 		  "CratesAndBarrelsShuffle":[[true, false], [30, 70]],
-		  "SnowballShuffle":[[true, false], [20, 80], "I don't think these are time dependent like MMR but to check, if so will make seperate weights for clock shuffle"],
+		  "SnowballIcicleRedBoulderShuffle":[[true, false], [20, 80], "all 3 as it affects more regions then, instead of just mountains. Will separate if other boulders get added"],
 		  "SkulltulaShuffle":[["none", "all"], [80, 20], "Happy to add 'specific cases' like OoT separate to MM"],
 
 		  "ClockShuffle":[[true, false], [10, 90], "Hard Setting"],
@@ -39,7 +39,7 @@
 		  "BossSoulsWeight": [[true, false], [10, 90], [0, 100], "Weight 1: No BKeysanity, Weight 2: BKeysanity, Hard Setting"],
 		  "StrayFairyShuffle": [["removed", "Anywhere"], [70, 30], "Only Affects Freeflying fairies and CT Fairy"],
 		  
-		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [60, 20, 9, 9, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
+		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [70, 20, 4, 4, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
 		  "DungeonEntranceShuffle": [["none", "full"], [55, 45]],
 		  "BossEntranceShuffle":[["none", "full"], [80, 20]],
 		  "GrottoShuffle":[["none", "full"], [80, 20]],
@@ -55,9 +55,9 @@
 		  
 		  "DecoupledEntrances":[[true, false], [0, 100]],
 		  
-		  "HardModeBalance":false,
+		  "HardModeBalance": false,
 		  
-		  "PrecompletedDungeons":[[0, 1, 2], [50, 35, 15]],
+		  "PrecompletedDungeons":[[0, 1, 2], [50, 35, 15]]
 	  },	  
 	  
 	  "RemainsWeights":{
@@ -66,10 +66,10 @@
 		  "LongQuest": [["none", "Anju and Kafei", "Zora Eggs", "Frog Choir"], [35, 20, 15, 30], "Hard Setting"],
 		  "NoStartingWeapon": [[true, false], [25, 75]],
 	  
-		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [65, 25, 10], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting"],
+		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [60, 25, 15], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting"],
 		  "GrassShuffle": [[true, false], [10, 90], "Hard Setting for now, could be changed?"],
 		  "PotShuffle":[[true, false], [15, 85], "Hard Setting"],
-		  "FreestandingShuffle":[[true, false], [20, 80]],
+		  "FreestandingShuffle":[["none","dungeons","overworld","all"], [65, 15, 15, 5]],
 		  "WonderSpotShuffle":[[true, false], [20, 80], "Hard Setting if also Freestanding"],
 		  "ShopShuffle":[["none", "full"], [60, 40]],
 		  "MerchantShuffle":[[true, false], [50, 50], "Affects all non-shop merchants and ALL Business scrubs, only happens alongside ShopShuffle"],
@@ -78,7 +78,7 @@
 		  "HiveShuffle":[[true, false], [20, 80]],
 		  "CowShuffle":[[true, false], [30, 70]],
 		  "CratesAndBarrelsShuffle":[[true, false], [30, 70]],
-		  "SnowballShuffle":[[true, false], [20, 80], "I don't think these are time dependent like MMR but to check, if so will make seperate weights for clock shuffle"],
+		  "SnowballIcicleRedBoulderShuffle":[["all", "none"], [20, 80], "all 3 as it affects more regions then, instead of just mountains. Will separate if other boulders get added"],
 		  "SkulltulaShuffle":[["none", "all"], [80, 20], "Happy to add 'specific cases' like OoT separate to MM"],
 
 		  "ClockShuffle":[[true, false], [10, 90], "Hard Setting"],
@@ -93,7 +93,7 @@
 		  "BossSoulsWeight": [[true, false], [10, 90], [0, 100], "Weight 1: No BKeysanity, Weight 2: BKeysanity, Hard Setting"],
 		  "StrayFairyShuffle": [["removed", "Anywhere"], [70, 30], "Only Affects Freeflying fairies and CT Fairy"],
 		  
-		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [0, 0, 0, 0, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
+		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [70, 20, 4, 4, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
 		  "DungeonEntranceShuffle": [["none", "full"], [45, 55]],
 		  "BossEntranceShuffle":[["none", "full"], [80, 20]],
 		  "GrottoShuffle":[["none", "full"], [80, 20]],
@@ -111,7 +111,7 @@
 		  
 		  "HardModeBalance":false,
 		  	  
-		  "PrecompletedDungeons":[[0, 1, 2], [100, 0, 0]],
+		  "PrecompletedDungeons":[[0, 1, 2], [100, 0, 0]]
 	  },
 	  
 	  "TriforceWeights":{
@@ -120,10 +120,10 @@
 		  "LongQuest": [["none", "Anju and Kafei", "Zora Eggs", "Frog Choir"], [35, 20, 15, 30], "Hard Setting"],
 		  "NoStartingWeapon": [[true, false], [25, 75]],
 	  
-		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [65, 25, 10], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting"],
+		  "SongShuffle": [["SongLocations", "Mixed with Owls", "anywhere"], [60, 25, 15], "Junks Skull Kid if anywhere, Owls and Songs ignores Starting Song setting"],
 		  "GrassShuffle": [[true, false], [10, 90], "Hard Setting for now, could be changed?"],
 		  "PotShuffle":[[true, false], [15, 85], "Hard Setting"],
-		  "FreestandingShuffle":[[true, false], [20, 80]],
+		  "FreestandingShuffle":[["none","dungeons","overworld","all"], [65, 15, 15, 5]],
 		  "WonderSpotShuffle":[[true, false], [20, 80], "Hard Setting if also Freestanding"],
 		  "ShopShuffle":[["none", "full"], [60, 40]],
 		  "MerchantShuffle":[[true, false], [50, 50], "Affects all non-shop merchants and ALL Business scrubs, only happens alongside ShopShuffle"],
@@ -132,7 +132,7 @@
 		  "HiveShuffle":[[true, false], [20, 80]],
 		  "CowShuffle":[[true, false], [30, 70]],
 		  "CratesAndBarrelsShuffle":[[true, false], [30, 70]],
-		  "SnowballShuffle":[[true, false], [20, 80], "I don't think these are time dependent like MMR but to check, if so will make seperate weights for clock shuffle"],
+		  "SnowballIcicleRedBoulderShuffle":[["all", "none"], [20, 80], "all 3 as it affects more regions then, instead of just mountains. Will separate if other boulders get added"],
 		  "SkulltulaShuffle":[["none", "all"], [80, 20], "Happy to add 'specific cases' like OoT separate to MM"],
 
 		  "ClockShuffle":[[true, false], [10, 90], "Hard Setting"],
@@ -147,7 +147,7 @@
 		  "BossSoulsWeight": [[true, false], [10, 90], [0, 100], "Weight 1: No BKeysanity, Weight 2: BKeysanity, Hard Setting"],
 		  "StrayFairyShuffle": [["removed", "Anywhere"], [70, 30], "Only Affects Freeflying fairies and CT Fairy"],
 		  
-		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [0, 0, 0, 0, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
+		  "WorldEntranceRandomizer": [["None", "Regions Only", "Overworld Only", "Interiors Only", "Full"], [70, 20, 4, 4, 2], "Decoupled feels TOO chaotic for this setting but can be added, Hard Setting if not none or regions"],
 		  "DungeonEntranceShuffle": [["none", "full"], [45, 55]],
 		  "BossEntranceShuffle":[["none", "full"], [80, 20]],
 		  "GrottoShuffle":[["none", "full"], [80, 20]],
@@ -165,7 +165,7 @@
 		  
 		  "HardModeBalance":false,
 		  
-		  "PrecompletedDungeons":[[0, 1, 2], [0, 0, 100]],
+		  "PrecompletedDungeons":[[0, 1, 2], [100, 0, 0]]
 	  },
 
 	  "Notes": "ALL objects have Chest Appearance Matches Contents, this means cows, skulltulas, crates, snowballs, everything! Converted base MMR Mystery Settings to OoTMM, but yeah. Post any suggestions to the github!"

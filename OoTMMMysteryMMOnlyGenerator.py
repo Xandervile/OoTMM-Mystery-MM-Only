@@ -374,7 +374,6 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         MysteryCount += 1
         EntranceCount += 1
 
-    print(SongShuffle)
     OwlWeight = weights["OwlShuffle"][1]
     if EntranceRandomizer == "full" or "Exterior Only":
         OwlWeight = weights["OwlShuffle"][2]

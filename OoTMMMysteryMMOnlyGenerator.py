@@ -292,7 +292,6 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
             JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
             JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
     if SongShuffle == "Mixed with Owls":
-        SongShuffle = "anywhere"
         MysteryCount += 1
         SongAndOwlList = ["MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING",
                       "MM_SONG_GORON", "MM_SONG_ZORA", "MM_SONG_EMPTINESS", "MM_SONG_ORDER", "MM_OWL_MILK_ROAD",
@@ -375,6 +374,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         MysteryCount += 1
         EntranceCount += 1
 
+    print(SongShuffle)
     OwlWeight = weights["OwlShuffle"][1]
     if EntranceRandomizer == "full" or "Exterior Only":
         OwlWeight = weights["OwlShuffle"][2]
@@ -385,6 +385,7 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or Myster
         MysteryCount += 1
         StartingItems["MM_OWL_CLOCK_TOWN"] = 1
     if SongShuffle == "Mixed with Owls":
+        SongShuffle = "anywhere"
         OwlShuffle = "anywhere"
 
     WalletShuffleWeight = weights["ChildWallet"][1]

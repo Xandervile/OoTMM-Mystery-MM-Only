@@ -12,8 +12,10 @@ with open("weights.json", "r") as read_file:
 settings = data["GameplaySettings"]
 
 MinMysterySettings = settings["MinimumSettingsAmount"]
+MaxMysterySettings = settings["MaximumSettingsAmount"]
 MysteryCount = 0
 HardCounter = 0
+TriforceAmount = 0
 
 # HarderSettings get rolled first to allow limitations
 HARDMODELIMIT = settings["HardModeLimit"]
@@ -84,9 +86,10 @@ DefaultPlando = {"locations": {}}
 def add_location(location_header, location_name, location_value):
     location_header["locations"][location_name] = location_value
 
-while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
+while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT or MysteryCount > MaxMysterySettings:
     MysteryCount = 0
     HardCounter = 0
+    EntranceCount = 0
     HardModeBalance = False
     RemainHunt = False
     FairyHunt = False
@@ -105,31 +108,28 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     preCompletedDungeons = False
     preCompletedDungeonsRemains = 0
 
-    ModeSettings = random.choices(["Default", "Remains Hunt", "Fairy Hunt"], settings["WinCon"][1])[0]
+    ModeSettings = random.choices(["Default", "Remains Hunt", "Triforce Hunt", "Triforce Quest"], settings["WinCon"][1])[0]
     if ModeSettings == "Remains Hunt":
         RemainsHunt = True
         RemainsLocation = "anywhere"
         weights = settings["RemainsWeights"]
-    elif ModeSettings == "Fairy Hunt":
-        FairyHunt = True
-        RemainsLocation = "anywhere"
-        add_location(Plando, "MM Woodfall Great Fairy", "MM_REMAINS_ODOLWA")
-        JunkList.remove("MM Woodfall Great Fairy")
-        add_location(Plando, "MM Snowhead Great Fairy", "MM_REMAINS_GOHT")
-        JunkList.remove("MM Snowhead Great Fairy")
-        add_location(Plando, "MM Great Bay Great Fairy", "MM_REMAINS_GYORG")
-        JunkList.remove("MM Great Bay Great Fairy")
-        add_location(Plando, "MM Ikana Great Fairy", "MM_REMAINS_TWINMOLD")
-        JunkList.remove("MM Ikana Great Fairy")
-        StartingItems["MM_MASK_GREAT_FAIRY"] = 1
-        ChestFairy = "anywhere"
-        weights = settings["FairyHuntWeights"]
+    elif ModeSettings == "Triforce Hunt" or ModeSettings == "Triforce Quest":
+        RemainsLocation = "dungeonbluewarps"
+        weights = settings["TriforceWeights"]
     else:
         RemainsLocation = "dungeonbluewarps"
         weights = settings["StandardWeights"]
 
+    if ModeSettings == "Triforce Hunt":
+        WinCond = "triforce"
+        TriforceAmount = random.choices(weights["TriforcePieces"][0], weights["TriforcePieces"][1])[0]
+    elif ModeSettings == "Triforce Quest":
+        WinCond = "triforce3"
+    else:
+        WinCond = "majora"
+
     HardModeBalance = weights["HardModeBalance"]
-                
+
     RandomStartingItem = random.choices(
         ["none", "MM_MASK_DEKU", "MM_MASK_GORON", "MM_MASK_ZORA", "MM_MASK_FIERCE_DEITY", "MM_BOW", "MM_HOOKSHOT",
          "MM_BOMB_BAG",
@@ -142,7 +142,6 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         ["MM_RECOVERY_HEART", "MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING", "MM_SONG_GORON",
          "MM_SONG_ZORA",
          "MM_SONG_EMPTINESS", "MM_SONG_ORDER"], weights["StartingSong"][1])[0]
-    add_location(Plando, "MM Initial Song of Healing", RandomStartingSong)
     if RandomStartingSong == "MM_RECOVERY_HEART":
         JunkList.remove("MM Southern Swamp Song of Soaring")
     if RandomStartingSong == "MM_SONG_ORDER":
@@ -150,12 +149,10 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         MoonConditions["remains"] = False
 
     GrassShuffleWeight = weights["GrassShuffle"][1]
-    GrassShuffle = random.choices(["none", "overworld", "dungeons", "all"], GrassShuffleWeight)[0]
-    if GrassShuffle != "none":
-        MysteryCount += 1
-    if GrassShuffle == "all":
+    GrassShuffle = random.choices([True, False], GrassShuffleWeight)[0]
+    if GrassShuffle == True:
         HardCounter += 1
-    #To add: TF Logic when that is fixed
+        MysteryCount += 1
 
     SKeyShuffleWeight = weights["SmallKeyShuffle"][1]
     SKeyShuffle = random.choices(["removed", "ownDungeon", "anywhere"], SKeyShuffleWeight)[0]
@@ -191,12 +188,26 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     if SharedBossSoulShuffle == True:
         HardCounter += 1
         MysteryCount += 1
+        if ModeSettings == "Default":
+            HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_ODOLWA"})
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_GOHT"})
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_GYORG"})
+            HintList.insert(HintIndex, {"type": "item",
+                                        "amount": 1,
+                                        "extra": 1,
+                                        "item": "MM_SOUL_BOSS_TWINMOLD"})
 
-    FreestandingShuffle = random.choices(["none", "overworld", "dungeons", "all"], weights["FreestandingShuffle"][1])[0]
-    if FreestandingShuffle == "dungeons" or FreestandingShuffle == "all":
-        FreeHearts = True
-    else:
-        FreeHearts = False
+    FreestandingShuffle = random.choices(["none", "dungeons", "overworld", "all"], weights["FreestandingShuffle"][1])[0]
     WonderSpotShuffle = random.choices([True, False], weights["WonderSpotShuffle"][1])[0]
     if FreestandingShuffle != "none" or WonderSpotShuffle != False:
         MysteryCount += 1
@@ -204,14 +215,12 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         if FreestandingShuffle == "all" and WonderSpotShuffle != False:
             HardCounter += 1
 
-    PotShuffle = random.choices(["none", "overworld", "dungeons", "all"], weights["PotShuffle"][1])[0]
-    if PotShuffle != "none":
+    PotShuffle = random.choices([True, False], weights["PotShuffle"][1])[0]
+    if PotShuffle == True:
         HintRegions = True
         MysteryCount += 1
-        if PotShuffle == "all":
-            HardCounter += 1
-        if PotShuffle == "overworld" or PotShuffle == "all":
-            JunkList.append("MM Goron Race Reward")
+        HardCounter += 1
+        JunkList.append("MM Goron Race Reward")
 
     FriendSoulShuffle = False
     EnemySoulShuffle = False
@@ -225,7 +234,14 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
             EnemySoulShuffle = True
         else:
             FriendSoulShuffle = True
-            EnemySoulShuffle = True     
+            EnemySoulShuffle = True
+
+    if FriendSoulShuffle == True:
+        HintIndex = next((i for i, hint in enumerate(HintList) if hint == HintToInsertBefore), None)
+        HintList.insert(HintIndex, {"type": "item",
+                                    "amount": 1,
+                                    "extra": 1,
+                                    "item": "MM_SOUL_NPC_MOON_CHILDREN"})
 
     LongQuest = random.choices(
         ["none", "MM Stock Pot Inn Couple\'s Mask", "MM Laboratory Zora Song", "MM Mountain Village Frog Choir HP"],
@@ -245,25 +261,29 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     if EntranceRandomizer == "Regions Only":  # Not Hard due to only 5 entrances shuffling
         MysteryCount += 1
         RegionsER = "full"
+        EntranceCount += 1
     elif EntranceRandomizer == "Exterior Only":
         MysteryCount += 1
         HardCounter += 1
         OverworldER = ["full", True]
+        EntranceCount += 1
     elif EntranceRandomizer == "Interior Only":
         MysteryCount += 1
         HardCounter += 1
         InteriorER = ["full", True]
+        EntranceCount += 1
     elif EntranceRandomizer == "All":
         MysteryCount += 1
         HardCounter += 1
         OverworldER = ["full", True]
         InteriorER = ["full", True]
+        EntranceCount += 2
 
         # To add: Decoupled? - This would by itself make the Hard Counter explode
         # Also to add: Mixed?
 
     # Other Settings get Randomized here
-    SongShuffle = random.choices(["songLocations", "anywhere"], weights["SongShuffle"][1])[0]
+    SongShuffle = random.choices(["songLocations", "Mixed with Owls", "anywhere"], weights["SongShuffle"][1])[0]
     if SongShuffle == "anywhere":
         MysteryCount += 1
         if "MM Southern Swamp Song of Soaring" in JunkList:
@@ -271,6 +291,29 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         if "MM Clock Tower Roof Skull Kid Song of Time" not in JunkList:
             JunkList.append("MM Clock Tower Roof Skull Kid Song of Time")
             JunkList.append("MM Clock Tower Roof Skull Kid Ocarina")
+    if SongShuffle == "Mixed with Owls":
+        MysteryCount += 1
+        SongAndOwlList = ["MM_SONG_EPONA", "MM_SONG_HEALING", "MM_SONG_STORMS", "MM_SONG_AWAKENING",
+                      "MM_SONG_GORON", "MM_SONG_ZORA", "MM_SONG_EMPTINESS", "MM_SONG_ORDER", "MM_OWL_MILK_ROAD",
+                      "MM_OWL_SOUTHERN_SWAMP", "MM_OWL_WOODFALL", "MM_OWL_MOUNTAIN_VILLAGE", "MM_OWL_SNOWHEAD",
+                      "MM_OWL_GREAT_BAY", "MM_OWL_ZORA_CAPE", "MM_OWL_IKANA_CANYON", "MM_OWL_STONE_TOWER"]
+        SongAndOwlLocation = ["MM Clock Tower Roof Skull Kid Song of Time",
+                          "MM Romani Ranch Epona Song",
+                          "MM Beneath The Graveyard Song of Storms", "MM Deku Palace Sonata of Awakening",
+                          "MM Goron Elder", "MM Ancient Castle of Ikana Song Emptiness", "MM Oath to Order", "MM Clock Town Owl Statue",
+                          "MM Milk Road Owl Statue", "MM Southern Swamp Owl Statue", "MM Woodfall Owl Statue",
+                          "MM Mountain Village Owl Statue", "MM Snowhead Owl Statue", "MM Great Bay Coast Owl Statue",
+                          "MM Zora Cape Owl Statue", "MM Ikana Canyon Owl Statue", "MM Stone Tower Owl Statue"]
+        add_location(Plando, "MM Initial Song of Healing", "MM_OWL_CLOCK_TOWN")
+        if "MM Clock Tower Roof Skull Kid Song of Time" in JunkList:
+            SongAndOwlLocation.remove("MM Clock Tower Roof Skull Kid Song of Time")
+            SongAndOwlLocation.append("MM Laboratory Zora Song")
+        for key in SongAndOwlLocation:
+            ChosenItem = random.choice(SongAndOwlList)
+            add_location(Plando, key, ChosenItem)
+            SongAndOwlList.remove(ChosenItem)
+    else:
+        add_location(Plando, "MM Initial Song of Healing", RandomStartingSong)          #Adds Random Starting Song only if not Owls and Songs
 
     TownFairy = "vanilla"
     FairyWeight = weights["StrayFairyShuffle"][1]
@@ -287,7 +330,8 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     ExtraDungeonEntranceShuffle = False
     erDungeons = random.choices(["none", "full"], weights["DungeonEntranceShuffle"][1])[0]
     if erDungeons == "full":
-        ExtraDungeonEntranceShuffle = random.choices([True, False], weights["ExtraDungeonEntranceShuffle"][1])[0]
+        ExtraDungeonEntranceShuffle = True
+        EntranceCount += 1
 
     BossEntranceShuffle = random.choices(["none", "full"], weights["BossEntranceShuffle"][1])[0]
     if BossEntranceShuffle == "full" or erDungeons == "full":
@@ -303,13 +347,17 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     if SharedCowShuffle == True:
         MysteryCount += 1
 
-    SharedCratesAndBarrels = random.choices(["none", "overworld", "dungeons", "all"], weights["CratesAndBarrelsShuffle"][1])[0]
-    if SharedCratesAndBarrels != "none":
+    SharedCratesAndBarrels = random.choices(["all", "none"], weights["CratesAndBarrelsShuffle"][1])[0]
+    if SharedCratesAndBarrels == "all":
         MysteryCount += 1
 
-    SnowballWeight = weights["SnowballShuffle"][1]
-    SnowballShuffle = random.choices(["none", "overworld", "dungeons", "all"], SnowballWeight)[0]
-    if SnowballShuffle != "none":
+    SnowballIcicleRedBoulderWeight = weights["SnowballIcicleRedBoulderShuffle"][1]
+    SnowballShuffle = random.choices(["all", "none"], SnowballIcicleRedBoulderWeight)[0]
+    if SnowballShuffle == "all":
+        MysteryCount += 1
+
+    ButterflyAndFairyShuffle = random.choices([True, False], weights["ButterflyAndFairyShuffle"][1])[0]
+    if ButterflyAndFairyShuffle == True:
         MysteryCount += 1
 
     SkulltulaShuffle = random.choices(["none", "all"], weights["SkulltulaShuffle"][1])[0]
@@ -317,17 +365,27 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
         HintRegions = True
         MysteryCount += 1
 
+    HiveShuffle = random.choices([True, False], weights["HiveShuffle"][1])[0]
+    if HiveShuffle == True:
+        MysteryCount += 1
+
     GrottoShuffle = random.choices(["none", "full"], weights["GrottoShuffle"][1])[0]
     if GrottoShuffle == "full":
         MysteryCount += 1
+        EntranceCount += 1
 
     OwlWeight = weights["OwlShuffle"][1]
     if EntranceRandomizer == "full" or "Exterior Only":
         OwlWeight = weights["OwlShuffle"][2]
+    if SongShuffle == "Mixed with Owls":
+        OwlWeight = [0, 100]
     OwlShuffle = random.choices(["anywhere", "none"], OwlWeight)[0]
     if OwlShuffle == "anywhere":
         MysteryCount += 1
         StartingItems["MM_OWL_CLOCK_TOWN"] = 1
+    if SongShuffle == "Mixed with Owls":
+        SongShuffle = "anywhere"
+        OwlShuffle = "anywhere"
 
     WalletShuffleWeight = weights["ChildWallet"][1]
     if RandomStartingItem == "MM_WALLET":
@@ -336,17 +394,44 @@ while MysteryCount < MinMysterySettings or HardCounter > HARDMODELIMIT:
     if NoWalletShuffle == True:
         MysteryCount += 1
 
+    MixedEntrances = "none"
+    MixedRegions = False
+    MixedOverworld = False
+    MixedIndoors = False
+    MixedGrottos = False
+    MixedDungeons = False
+    if EntranceCount > 1:
+        MixedEntrances = random.choices(weights["Mixed"]["Allow"][0], weights["Mixed"]["Allow"][1])[0]
+        if MixedEntrances == "full":
+            if EntranceRandomizer == "Regions Only":
+                MixedRegions = random.choices(weights["Mixed"]["Grottos"][0], weights["Mixed"]["Regions"][1])[0]
+            if EntranceRandomizer == "Exterior Only" or EntranceRandomizer == "All":
+                MixedOverworld = random.choices(weights["Mixed"]["Grottos"][0], weights["Mixed"]["Overworld"][1])[0]
+            if EntranceRandomizer == "Interior Only" or EntranceRandomizer == "All":
+                MixedIndoors = random.choices(weights["Mixed"]["Grottos"][0], weights["Mixed"]["Interior"][1])[0]
+            if GrottoShuffle == True:
+                MixedGrottos = random.choices(weights["Mixed"]["Grottos"][0], weights["Mixed"]["Grottos"][1])[0]
+            if erDungeons == "full":
+                MixedDungeons = random.choices(weights["Mixed"]["Dungeons"][0], weights["Mixed"]["Dungeons"][1])[0]
+
+    DecoupledEntrances = False
+    if EntranceCount > 0:
+        DecoupledEntrances = random.choices(weights["DecoupledEntrances"][0], weights["DecoupledEntrances"][1])[0]
+
+    preCompletedDungeonsRemains = random.choices(weights["PrecompletedDungeons"][0], weights["PrecompletedDungeons"][1])[0]
+    if preCompletedDungeonsRemains > 0:
+        preCompletedDungeons = True
+
     if HardCounter >= HARDMODELIMIT and HardModeBalance == True:
-        if FairyHunt == False:
-            preCompletedDungeons = True
-            preCompletedDungeonsRemains = random.choices([1, 2], [80, 20])[0]
-        else:  
-            StrayFairyRewardCount= 10
+        preCompletedDungeons = True
+        preCompletedDungeonsRemains = random.choices([0, 1, 2], [0, 80, 20])[0]
 
 # Rest of the settings are not stored already so are randomised here. To add:
 settings_data = {
     "games": "mm",
-    "goal": "majora",
+    "goal": WinCond,
+    "triforceGoal": TriforceAmount,
+    "triforceAmount": round(1.5*TriforceAmount),
     "extraHintRegions": HintRegions,
     "hintImportance": True,
     "songs": SongShuffle,
@@ -366,21 +451,24 @@ settings_data = {
     "shufflePotsMm": PotShuffle,
     "shuffleCratesMm": SharedCratesAndBarrels,
     "shuffleBarrelsMm": SharedCratesAndBarrels,
-    "shuffleHivesMm": False,
+    "shuffleHivesMm": HiveShuffle,
     "shuffleGrassMm": GrassShuffle,
-    #"shuffleTFGrassMm": shuffleTFGrassMm ,
     "shuffleFreeRupeesMm": FreestandingShuffle,
-    "shuffleFreeHeartsMm": FreeHearts,
+    "shuffleFreeHeartsMm": FreestandingShuffle == "dungeons" or FreestandingShuffle == "all",
     "shuffleWonderItemsMm": WonderSpotShuffle,
     "shuffleSnowballsMm": SnowballShuffle,
+    "shuffleButterfliesMm": ButterflyAndFairyShuffle,
     "shuffleMerchantsMm": ScrubShuffle,
-    "fairyFountainFairyShuffleMm": False,
+    "shuffleIciclesMm": SnowballShuffle == "all",
+    "shuffleRedBouldersMm": SnowballShuffle == "all",
+    "fairyFountainFairyShuffleMm": ButterflyAndFairyShuffle,
     "clearStateDungeonsMm": "both",
-    "beneathWell": "vanilla",
+    "beneathWell": "remorseless",
     "majoraChild": "custom",
     "freeScarecrowMm": True,
     "strayFairyRewardCount": StrayFairyRewardCount,
     "preCompletedDungeons": preCompletedDungeons,
+    "preCompletedDungeonsMajor": preCompletedDungeonsRemains,
     "preCompletedDungeonsRemains": preCompletedDungeonsRemains,
     "mmPreActivatedOwls": {"type": "none",
                            "values": ["clocktown"]},
@@ -417,11 +505,13 @@ settings_data = {
     "erBoss": BossEntranceShuffle,
     "erDungeons": erDungeons,
     "erGrottos": GrottoShuffle,
-    "erMixed": "none",
-    "erMixedDungeons": False,
-    "erMixedOverworld": False,
-    "erMixedIndoors": False,
-    "erMixedGrottos": False,
+    "erMixed": MixedEntrances,
+    "erMixedRegions": MixedRegions,
+    "erMixedOverworld": MixedOverworld,
+    "erMixedIndoors": MixedIndoors,
+    "erMixedGrottos": MixedGrottos,
+    "erMixedDungeons": MixedDungeons,
+    "erDecoupled": DecoupledEntrances,
     "erMajorDungeons": erDungeons == "full",
     "erSpiderHouses": ExtraDungeonEntranceShuffle,
     "erPirateFortress": ExtraDungeonEntranceShuffle,
@@ -489,12 +579,6 @@ encoded_data = encoded_data.rstrip("=")
 # Format the final seed string (prepend 'v1.' to the encoded string)
 seed_string = f"v1.{encoded_data}"
 
-# Output the result
-#print("Encoded Seed String:")
-#print(seed_string)
-#print(HardCounter)
-#print(MysteryCount)
-
 with open("ootmmmysterymm_seed_output.txt", "w") as file:
     file.write("Seed String:\n")
     file.write("\n")
@@ -502,32 +586,11 @@ with open("ootmmmysterymm_seed_output.txt", "w") as file:
 
 with open("ootmmmysterymm_settings_output.txt", "w") as file:
     file.write(f"{ModeSettings} Settings Spoiler:\n")
+    if ModeSettings == "Triforce Hunt":
+        file.write(f"Triforce Pieces Needed: {TriforceAmount}")
     file.write("\n")
     file.write(f"Settings Counter: {MysteryCount}\n")
     file.write(f"Hard Settings: {HardCounter}\n")
     file.write("\n")
     for key, value in settings_data.items():
         file.write(f"{key}: {value}\n")
-
-seed_string ="v1.eJyrrgUAAXUA+Q=="
-# Remove the 'v1.' prefix
-if seed_string.startswith('v1.'):
-   seed_string = seed_string[3:]
-
-# Add padding back if needed
-seed_string += '=' * (-len(seed_string) % 4)
-
-# Base64 decode
-decoded_bytes = base64.urlsafe_b64decode(seed_string)
-
-# Decompress using zlib
-decompressed_bytes = zlib.decompress(decoded_bytes)
-
-# Convert bytes to JSON string
-settings_json = decompressed_bytes.decode('utf-8')
-
-# Parse the JSON string into Python dictionary
-settings_data = json.loads(settings_json)
-
-# Print the result
-print(settings_data)
